@@ -1,0 +1,27 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+// exports.up = function (knex) {};
+
+// /**
+//  * @param { import("knex").Knex } knex
+//  * @returns { Promise<void> }
+//  */
+// exports.down = function (knex) {};
+
+exports.up = function (knex) {
+  return knex.schema.createTable("admin", (table) => {
+    table.increments("id").primary();
+    table.string("name").notNullable();
+    table.string("email").notNullable().unique();
+    table.string("password").notNullable();
+    table.string("gender").notNullable();
+    table.string("role").defaultTo("admin");
+    table.timestamps(true, true);
+  });
+};
+
+exports.down = function (knex) {
+  return knex.schema.dropTableIfExists("admin");
+};

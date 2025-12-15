@@ -1,0 +1,13 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+/db/knex.js
+--- a/file:///home/amir/CLEANWAVE/COMPANY/BACK-END/db/knex.js
++++ b/file:///home/amir/CLEANWAVE/COMPANY/BACK-END/db/knex.js
+@@ -1,7 +1,7 @@
+ const environment = process.env.NODE_ENV || "development";
+ const config = require("../knexfile.js")[environment];
+-const knex = require("knex")(config); --- IGNORE ---
++const knex = require("knex")(config);  
+ module.exports = knex; 

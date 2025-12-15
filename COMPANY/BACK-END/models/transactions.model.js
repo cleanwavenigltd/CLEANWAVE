@@ -1,0 +1,40 @@
+const knex = require("../db/knex");
+
+const addTransactionModel = async ({
+  userId,
+  amount,
+  transactionType,
+  date,         
+    description,
+}) => {
+  try {
+    const transaction = await knex("transactions")
+      .insert({
+        user_id: userId,
+        amount,
+        type: transactionType,
+        date,
+        description,
+        created_at: knex.fn.now(),
+        updated_at: knex.fn.now(),
+      })
+      .returning("*");
+    return { success: true, transaction };
+  } catch (err) {
+    console.log("ERROR FOUND :", err);
+    return { success: false, error: "Server Error" };
+  }
+};
+
+const fetchTransactions = async (userId) => {
+  try {
+    const transactions = await knex("transactions")
+      .where({ user_id: userId })
+      .select("*");
+    return { success: true, transactions };
+  } catch (err) {
+    return { success: false, error: "Server Error" };
+  }
+};
+
+module.exports = { createTransaction: addTransactionModel, fetchTransactions };
