@@ -1,11 +1,9 @@
-import axios from "axios";
+import api from "../utils/api";
 
-axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL;
-axios.defaults.withCredentials = true;
 
 export const adminLogin = async (adminData) => {
   try {
-    const response = await axios.post("/admin/login", adminData);
+    const response = await api.post("/admin/login", adminData);
     return response.data;
   } catch (error) {
     return error.response?.data?.error || "Admin Login failed";
@@ -13,7 +11,7 @@ export const adminLogin = async (adminData) => {
 };
 export const adminCheckLogin = async () => {
   try {
-    const response = await axios.get("/admin/check-login");
+    const response = await api.get("/admin/check-login");
     // console.log("Check-login Function:: ", response.data.success);
     return response.data;
   } catch (err) {
@@ -23,7 +21,7 @@ export const adminCheckLogin = async () => {
 };
 export const adminLogout = async () => {
   try {
-    const res = await axios.post("/admin/logout");
+    const res = await api.post("/admin/logout");
     console.log("Error loginout ", res);
     return res.data;
   } catch (err) {
@@ -34,7 +32,7 @@ export const adminLogout = async () => {
 
 export const getAllUsers = async () => {
   try {
-    const response = await axios.get("/admin/total-users");
+    const response = await api.get("/admin/total-users");
 
     return response.data;
   } catch (error) {
@@ -44,7 +42,7 @@ export const getAllUsers = async () => {
 
 export const getAllInfo = async () => {
   try {
-    const response = await axios.get("/admin/all-info");
+    const response = await api.get("/admin/all-info");
 
     return response.data;
   } catch (error) {

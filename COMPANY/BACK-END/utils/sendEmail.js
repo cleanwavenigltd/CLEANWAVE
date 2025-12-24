@@ -10,20 +10,6 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.sendVerificationEmail = async (email, link) => {
-  // const html = `
-  //   <div style="font-family:sans-serif;padding:20px;">
-  //     <h2>Email Verification</h2>
-  //     <p>Please click the button below to verify your email:</p>
-
-  //     <a href="${link}"
-  //       style="padding:12px 20px;background:#2563eb;color:white;
-  //       border-radius:6px;text-decoration:none;display:inline-block;margin:20px 0;">
-  //       Verify Email
-  //     </a>
-
-  //     <p>If you didn’t create this account, you can ignore this email.</p>
-  //   </div>
-  // `;
   const html = `
   <div style="margin:0;padding:0;background:#f3f4f6;font-family:Arial, Helvetica, sans-serif;">
     <div style="max-width:600px;margin:40px auto;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.08);">
@@ -71,11 +57,17 @@ exports.sendVerificationEmail = async (email, link) => {
     </div>
   </div>
 `;
-
-  return transporter.sendMail({
-    from: `"Cleanwave" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Verify Your Email",
-    html,
-  });
+  try {
+    const response = await transporter.sendMail({
+      from: `"Cleanwave" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Verify Your Email",
+      html,
+    });
+    console.log("utils/sendEmail:: response ", response);
+    return response;
+  } catch (err) {
+    console.log("util/sendEmail Error :: ", err);
+    return { error: "Unable to send verification" };
+  }
 };

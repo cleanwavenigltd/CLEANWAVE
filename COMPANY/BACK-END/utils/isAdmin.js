@@ -36,7 +36,11 @@ const jwt = require("jsonwebtoken");
 exports.isAdmin = (req, res, next) => {
   // const header = req.headers.authorization;
 
-  const token = req.cookies.authToken;
+  const authHeader = req.headers["authorization"];
+  console.log("Authenticate Middleware:: Auth Header:: ", authHeader);
+
+  // Extract the token part from "Bearer <token>"
+  const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }

@@ -6,8 +6,13 @@ import Community from "../pages/aggregator/components/Community";
 import WalletPage from "../pages/aggregator/components/Wallet";
 import Profile from "../pages/aggregator/components/Profile";
 import { PageProvider } from "../contexts/PageContext";
+import { useUser } from "../contexts/UserContext";
 export default function Agg() {
   const [activeTab, setActiveTab] = useState("home");
+  const { user, isLoading, role } = useUser();
+  if (isLoading) {
+    return <div>Loading...</div>; // Show a loader while authentication is checked
+  }
 
   const menu = [
     { id: "home", label: "Home", icon: <Home size={25} /> },
@@ -65,7 +70,7 @@ export default function Agg() {
   return (
     <PageProvider value={{ activeTab, setActiveTab }}>
       <div className="min-h-screen bg-gray-100 flex flex-col">
-        <Header userName="Amir" role="aggregator" />
+        <Header userName={user?.name || "user"} role={role || "guest"} />
         <div className="flex-1">{renderScreen()}</div>
 
         <nav className="h-[10%]  border-t-4 border-gray-200 fixed bottom-0 left-0 right-0 z-50 bg-white flex justify-around">

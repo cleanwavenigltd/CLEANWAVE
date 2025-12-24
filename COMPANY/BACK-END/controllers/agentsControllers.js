@@ -1,4 +1,4 @@
-const knex = require("../db/knex")
+const knex = require("../db/knex");
 const {
   registerAgent,
   getAllAgents,
@@ -41,10 +41,21 @@ const addAgent = async (req, res) => {
 };
 const getAgentRequest = async (req, res) => {
   try {
-    const {userId} = req.user;
-    const agents = await knex("Users").where({created_by : userId,role:"agent"}).count("* as count").first();
+    const { userId } = req.user;
+    const agents = await knex("Users")
+      .where({ created_by: userId, role: "agent" })
+      .count("* as count")
+      .first();
+
+    const user = await knex("Users").where({ id: userId }).select("*").first();
+    const agentsList = await knex("Users").where({
+      state: user.state,
+      lga: user.lga,
+      role: "agent",
+    });
+    console.log("agentsList::", agentsList);
     if (agents) {
-      return res.status(200).json({ success: true, agents });
+      return res.status(200).json({ success: true, agents, agentsList });
     } else {
       return res.status(400).json({ error: "No agent Found" });
     }

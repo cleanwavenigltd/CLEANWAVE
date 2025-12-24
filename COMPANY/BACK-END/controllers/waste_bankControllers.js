@@ -78,7 +78,8 @@ const getConnWasteBank = async (req, res) => {
       const conWasteBanks = await knex("Users")
         .where({
           role: "waste",
-          location: agent.location,
+          state: agent.state,
+          lga: agent.lga,
         })
         .count("* as count")
         .first();

@@ -5,7 +5,7 @@ import Pickups from "../pages/user/components/Pickups";
 import WalletPage from "../pages/user/components/Wallet";
 import Profile from "../pages/user/components/Profile";
 import Header from "./Header";
-export default function UserDashboard() {
+export default function UserLayout({ onSwitch }) {
   const [activeTab, setActiveTab] = useState("home");
 
   const menu = [
@@ -20,7 +20,7 @@ export default function UserDashboard() {
       case "home":
         return (
           <div className="flex-1 w-full px-2 sm:px-6 max-w-3xl mx-auto items-start">
-            <HomePage />
+            <HomePage onSwitch={onSwitch} />
           </div>
           //   <div className="p-6">
           //     <h1 className="text-xl font-semibold mb-4">Welcome to Cleanwave</h1>
@@ -60,7 +60,7 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header userName="Amir" />
+      <Header userName="guest" />
 
       <div className="flex-1">{renderScreen()}</div>
 

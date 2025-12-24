@@ -5,9 +5,9 @@ const {
 const bcrypt = require("bcryptjs");
 const addAggregator = async (req, res) => {
   try {
-    const { name, password, email, gender, phone, location } = req.body;
+    const { name, password, email, gender, phone, state, lga } = req.body;
     console.log("aggregatorControllers :: logs:", req.body);
-    if (!name || !password || !email || !gender || !phone || !location) {
+    if (!name || !password || !email || !gender || !phone || !state || !lga) {
       return res.status(400).json({ error: "All fields are required" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,7 +18,8 @@ const addAggregator = async (req, res) => {
       password: hashedPassword,
       gender,
       phone,
-      location,
+      state,
+      lga,
     });
     if (aggregator.success) {
       return res.status(200).json(aggregator);

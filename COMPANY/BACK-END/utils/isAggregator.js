@@ -25,7 +25,11 @@
 const jwt = require("jsonwebtoken");
 
 exports.isAggregator = (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const authHeader = req.headers["authorization"];
+  console.log("Authenticate Middleware:: Auth Header:: ", authHeader);
+
+  // Extract the token part from "Bearer <token>"
+  const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
     return res.status(401).json({ error: "Not authenticated" });
   }
@@ -33,7 +37,8 @@ exports.isAggregator = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (decoded.role !== "aggregator")
-      return res.status(403).json({ error: "Unuthorized" });
+      // console.log("isAggregator decoded:: ", decoded);
+      return res.status(403).json({ error: "Unuthorized !" });
 
     req.user = decoded;
 

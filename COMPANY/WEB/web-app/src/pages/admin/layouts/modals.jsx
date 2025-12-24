@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { MapPin } from "lucide-react";
 import Input from "./input";
+import nigeriaLocations from "../../../data/nigeriaLocations.json";
 // import { reg, get } from "../../../services/aggregatorservice";
 // import { on } from "../../../../../../BACK-END/db/knex";
 
+const NIGERIA_LOCATIONS = nigeriaLocations;
 function UserModal({
   user,
   title,
@@ -16,12 +19,14 @@ function UserModal({
     email: user?.email || "",
     phone: user?.phone || "",
     role: user?.role || "",
-    location: user?.location || "",
+    // location: user?.location || "",
     // capacity: user?.capacity || "",
     age: user?.age || "",
     gender: user?.gender || "",
     // ensure boolean
     is_verified: user?.is_verified || false,
+    state: user?.state || "",
+    lga: user?.lga || "",
   });
   console.log("UserModal user::", user);
   const [success, setSuccess] = useState("");
@@ -32,7 +37,11 @@ function UserModal({
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    setForm((prev) => ({ ...prev, [name]: newValue }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: newValue,
+      ...(name === "state" ? { lga: "" } : {}),
+    }));
   };
 
   // const showCapacity = () => {
@@ -101,7 +110,7 @@ function UserModal({
           email: "",
           phone: "",
           role: "",
-          location: "",
+          // location: "",
           capacity: "",
           age: "",
           gender: "",
@@ -150,6 +159,51 @@ function UserModal({
             value={form.email}
             onChange={handleChange}
           />
+          {/* State Selection */}
+          <div className="relative w-full">
+            <MapPin className="absolute left-3 top-[38px] text-gray-400 w-5 h-5" />
+            <label className="block text-gray-500 text-[10px] mb-1">
+              State
+            </label>
+            <select
+              name="state"
+              value={form.state}
+              onChange={handleChange}
+              className="h-12 w-full border border-gray-300 rounded-md pl-10 pr-3 text-gray-900 focus:ring-1 focus:ring-[#8CA566] outline-none text-[14px]"
+            >
+              <option value="">Select State</option>
+              {Object.keys(NIGERIA_LOCATIONS)
+                .sort()
+                .map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          {/* LGA Selection */}
+          <div className="relative w-full">
+            <MapPin className="absolute left-3 top-[38px] text-gray-400 w-5 h-5" />
+            <label className="block text-gray-500 text-[10px] mb-1">
+              Local Government (LGA)
+            </label>
+            <select
+              name="lga"
+              value={form.lga}
+              onChange={handleChange}
+              disabled={!form.state}
+              className="h-12 w-full border border-gray-300 rounded-md pl-10 pr-3 text-gray-900 focus:ring-1 focus:ring-[#8CA566] outline-none text-[14px] disabled:bg-gray-100"
+            >
+              <option value="">Select LGA</option>
+              {form.state &&
+                NIGERIA_LOCATIONS[form.state].map((lga) => (
+                  <option key={lga} value={lga}>
+                    {lga}
+                  </option>
+                ))}
+            </select>
+          </div>
 
           <Select
             label="Gender"
@@ -179,16 +233,16 @@ function UserModal({
               onChange={handleChange}
             />
           )}
-
+          {/* 
           {user?.location ||
-            (title == "Aggregator" && (
-              <Input
-                label="Location"
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-              />
-            ))}
+            (title == "Aggregator" && ( */}
+          {/* <Input
+            label="Location"
+            name="location"
+            value={form.location}
+            onChange={handleChange}
+          /> */}
+          {/* ))} */}
           {verify !== undefined && showVerify()}
 
           <div className="flex justify-end gap-3 pt-4">

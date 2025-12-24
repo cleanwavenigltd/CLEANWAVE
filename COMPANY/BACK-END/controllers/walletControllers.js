@@ -9,7 +9,7 @@ const getWalletBalance = async (req, res) => {
     }
 
     // const wallet = await knex("Wallet").where({ user_id: userId }).first();
-    const wallet = await knex("Wallet").where({ id: userId }).first();
+    const wallet = await knex("Wallet").where({ user_id: userId }).first();
 
     console.log("walletControllers ::", wallet);
 

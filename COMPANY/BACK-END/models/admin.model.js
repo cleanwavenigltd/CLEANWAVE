@@ -10,8 +10,9 @@ const getAllUsers = async () => {
         "Users.email",
         "Users.gender",
         "Users.phone",
-        "Users.location",
-        "Users.capacity",
+        "Users.state",
+        "Users.lga",
+        "Users.is_verified",
         "Users.created_at",
         "Users.updated_at",
         "Wallet.balance"

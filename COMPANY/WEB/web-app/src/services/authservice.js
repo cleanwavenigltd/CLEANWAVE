@@ -1,33 +1,37 @@
-import axios from "axios";
-
-axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL;
-axios.defaults.withCredentials = true;
+import api from "../utils/api";
 
 export const register = async (userData) => {
   try {
-    const response = await axios.post("/auth/register", userData);
+    const response = await api.post("/auth/register", userData);
 
     return response.data;
   } catch (error) {
-    return error.message || "Registration failed";
+    return error.response?.data || "Registration failed";
   }
 };
 
 export const login = async (userData) => {
   try {
-    const response = await axios.post("/auth/login", userData);
-    console.log("Response:", response);
-    
+    const response = await api.post("/auth/login", userData);
+    console.log("Login Response:", response.data);
+    console.log("Login Response Status:", response.status);
+
     return response.data;
   } catch (error) {
-    console.log("ERoor", error.message);
+    console.log("Login Error:", error.message);
+    console.log("Login Error Response:", error.response?.data);
     return error.response?.data?.error || "Login failed";
   }
 };
 export const checkLogin = async () => {
   try {
-    const response = await axios.get("/auth/check-login");
-    console.log("Check-login Function:: ", response.response);
+    const response = await api.get("/auth/check-login", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("Check-login Function:: ", response.data);
     return response.data;
   } catch (err) {
     console.log("checklogin ::", err);
@@ -36,7 +40,7 @@ export const checkLogin = async () => {
 };
 export const logout = async () => {
   try {
-    const res = await axios.post("/auth/logout");
+    const res = await api.post("/auth/logout");
     console.log("Error loginout ", res);
     return res.data;
   } catch (err) {
@@ -47,7 +51,7 @@ export const logout = async () => {
 
 export const getProfile = async () => {
   try {
-    const response = await axios.get("/auth/profile");
+    const response = await api.get("/auth/profile");
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -57,7 +61,7 @@ export const getProfile = async () => {
 
 export const updateProfile = async (profileData) => {
   try {
-    const response = await axios.put("/admin/update-profile", profileData);
+    const response = await api.put("/admin/update-profile", profileData);
     return response.data;
   } catch (error) {
     return error.message || "Update failed";
@@ -66,11 +70,12 @@ export const updateProfile = async (profileData) => {
 
 export const walletBalance = async () => {
   try {
-    const response = await axios.get("/wallet/balance");
+    const response = await api.get("/wallet/balance");
     console.log(response.data);
 
     return response.data;
   } catch (error) {
+    console.error("Error in Wallet Balance ROute:: ", error);
     return error.message || "No data found";
   }
 };

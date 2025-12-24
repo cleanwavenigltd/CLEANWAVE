@@ -37,7 +37,8 @@ const adminLogin = async (req, res) => {
     });
     return res
       .status(200)
-      .json({ success: true, role: admin.role, redirect: "/dashboard" });
+      .json({ success: true, token: token,
+      role: admin.role, redirect: "/dashboard" });
   } catch (err) {
     console.log("AdminLogin:: ERROR", err);
     return res.status(500).json({ error: "Server Error" });
@@ -146,8 +147,17 @@ const totalUsers = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { name, email, age, phone, password, gender, locaton, is_verified } =
-      req.body;
+    const {
+      name,
+      email,
+      age,
+      phone,
+      password,
+      gender,
+      state,
+      lga,
+      is_verified,
+    } = req.body;
     console.log("adminControllers:: This is request Body :", req.body);
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
@@ -169,7 +179,8 @@ const updateProfile = async (req, res) => {
         age: age || existinUser.age,
         password: hashedPassword || existinUser.password,
         gender: gender || existinUser.gender,
-        locaton: locaton || existinUser.locaton,
+        state: state || existinUser.state,
+        lga: lga || existinUser.lga,
         is_verified: is_verified,
         updated_at: knex.fn.now(),
       });

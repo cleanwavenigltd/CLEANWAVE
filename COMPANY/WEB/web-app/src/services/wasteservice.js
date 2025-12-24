@@ -1,10 +1,8 @@
-import axios from "axios";
+import api from "../utils/api";
 
-axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL;
-axios.defaults.withCredentials = true;
 export const registerWaste = async (userData) => {
   try {
-    const response = await axios.post("/wastebank/register", userData);
+    const response = await api.post("/wastebank/register", userData);
 
     return { success: true, data: response.data };
   } catch (error) {
@@ -18,7 +16,7 @@ export const registerWaste = async (userData) => {
 
 export const getWasteBanks = async () => {
   try {
-    const response = await axios.get("/wastebank/get-all");
+    const response = await api.get("/wastebank/get-all");
     console.log("resp", response);
     return { success: true, data: response.data };
   } catch (error) {
@@ -35,11 +33,12 @@ export const getWasteBanks = async () => {
 
 export const getWasteBank = async () => {
   try {
-    const response = await axios.get("/wastebank/get");
+    const response = await api.get("/wastebank/get");
     console.log("resp", response);
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error fetching Wastebanks:", error);
+    console.log("error response", error.response);
     return {
       success: false,
       message:
@@ -52,7 +51,7 @@ export const getWasteBank = async () => {
 
 export const createWasteCategory = async (categoryData) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       "/waste-categories/categories",
       categoryData
     );
@@ -71,7 +70,7 @@ export const createWasteCategory = async (categoryData) => {
 // export { createWasteCategory };
 export const getWasteCategories = async () => {
   try {
-    const response = await axios.get("/waste-categories/categories");
+    const response = await api.get("/waste-categories/categories");
     return { success: true, data: response.data };
   } catch (error) {
     return {
@@ -86,7 +85,7 @@ export const getWasteCategories = async () => {
 
 export const getConWasteBank = async () => {
   try {
-    const response = await axios.get("/wastebank/conn-waste-bank");
+    const response = await api.get("/wastebank/conn-waste-bank");
     return { success: true, data: response.data };
   } catch (error) {
     console.error("Error fetching Wastebanks:", error);

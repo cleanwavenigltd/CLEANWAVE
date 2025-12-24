@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config;
+require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const authRoutes = require("../routes/authRoutes");
 const app = express();
@@ -19,10 +19,21 @@ const notificationsRoutes = require("../routes/notificationsRoutes");
 // app.use(cors());
 app.use(
   cors({
-    origin: `${process.env.FRONTEND_URL}`,
+    origin: process.env.FRONTEND_URL,
     credentials: true,
+    // You MUST explicitly list Authorization here for the browser to send it
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
+// app.use(
+//   cors({
+//     origin: `${process.env.FRONTEND_URL}`,
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     credentials: true,
+//   })
+// );
 app.use(cookieParser());
 app.use(express.json());
 

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Select } from "../../admin/layouts/modals";
-import { AlertCircle, CheckCircle, Loader } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader, MapPin } from "lucide-react";
 import { registerAgent } from "../../../services/agentservice";
 import { registerWaste } from "../../../services/wasteservice";
+// import nigeriaLocations from "../../../data/nigeriaLocations.json";
+// const NIGERIA_LOCATIONS = nigeriaLocations;
 
 const Community = () => {
   const [form, setForm] = useState({
@@ -11,20 +13,33 @@ const Community = () => {
     phone: "",
     password: "",
     gender: "",
-    age: "",
+    // age: "",
+    // state: "",
+    lga: "",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [mode, setMode] = useState("wastebank");
   const [loading, setLoading] = useState(false);
 
+  // const handleChange = (e) => {
+  //   setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  // };
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+      // Reset LGA if State changes
+      ...(name === "state" ? { lga: "" } : {}),
+    }));
   };
 
   const validateForm = (data) => {
     if (!data.name?.trim()) return "Name is required.";
     if (!/^\S+@\S+\.\S+$/.test(data.email)) return "Valid email required.";
+    if (!form.gender) return "Gender is required.";
+    if (!data.phone?.trim()) return "Phone Number is required.";
     if (!/^\+?[0-9]{7,15}$/.test(data.phone)) return "Valid phone required.";
     if (data.password.length < 8)
       return "Password must be at least 8 characters.";
@@ -147,6 +162,51 @@ const Community = () => {
               value={form.phone}
               onChange={handleChange}
             />
+            {/* State Selection
+            <div className="relative w-full">
+              <MapPin className="absolute left-3 top-[38px] text-gray-400 w-5 h-5" />
+              <label className="block text-gray-500 text-[10px] mb-1">
+                State
+              </label>
+              <select
+                name="state"
+                value={form.state}
+                onChange={handleChange}
+                className="h-12 w-full border border-gray-300 rounded-md pl-10 pr-3 text-gray-900 focus:ring-1 focus:ring-[#8CA566] outline-none text-[14px]"
+              >
+                <option value="">Select State</option>
+                {Object.keys(NIGERIA_LOCATIONS)
+                  .sort()
+                  .map((state) => (
+                    <option key={state} value={state}>
+                      {state}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            LGA Selection
+            <div className="relative w-full">
+              <MapPin className="absolute left-3 top-[38px] text-gray-400 w-5 h-5" />
+              <label className="block text-gray-500 text-[10px] mb-1">
+                Local Government (LGA)
+              </label>
+              <select
+                name="lga"
+                value={form.lga}
+                onChange={handleChange}
+                disabled={!form.state}
+                className="h-12 w-full border border-gray-300 rounded-md pl-10 pr-3 text-gray-900 focus:ring-1 focus:ring-[#8CA566] outline-none text-[14px] disabled:bg-gray-100"
+              >
+                <option value="">Select LGA</option>
+                {form.state &&
+                  NIGERIA_LOCATIONS[form.state].map((lga) => (
+                    <option key={lga} value={lga}>
+                      {lga}
+                    </option>
+                  ))}
+              </select>
+            </div> */}
             <Input
               label="Password"
               type="password"

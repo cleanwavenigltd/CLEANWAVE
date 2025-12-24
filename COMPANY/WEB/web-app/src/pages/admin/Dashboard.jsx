@@ -14,6 +14,8 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearAuth } from "../../store/authSlice";
 import { adminLogout } from "../../services/adminService";
 
 import Agents from "./components/ManageAgents";
@@ -37,13 +39,14 @@ export default function Dashboard() {
   const [route, setRoute] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const url = import.meta.env.VITE_ADMIN_LOGIN;
 
   const handleLogout = async () => {
     try {
+      dispatch(clearAuth());
       await adminLogout();
     } catch (err) {
-
       console.error("Logout failed:", err);
     } finally {
       navigate(`/${url}`);

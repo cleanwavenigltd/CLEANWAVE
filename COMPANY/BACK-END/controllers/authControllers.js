@@ -8,9 +8,9 @@ const { sendVerificationEmail } = require("../utils/sendEmail");
 // ===============================
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, phone, password, gender } = req.body;
-
-    if (!name || !email || !phone || !password || !gender) {
+    const { name, email, state, lga, phone, password, gender } = req.body;
+    console.log("Registration Request Body:: ", req.body);
+    if (!name || !email || !state || !lga || !phone || !password || !gender) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -18,6 +18,7 @@ exports.createUser = async (req, res) => {
     if (exists) {
       return res.status(409).json({ error: "Credentials already exist" });
     }
+    console.log("Passed");
     const phoneNumber = await knex("Users").where({ phone }).first();
     if (phoneNumber) {
       return res.status(409).json({ error: "Credentials already exist" });
@@ -30,9 +31,13 @@ exports.createUser = async (req, res) => {
       process.env.EMAIL_TOKEN_SECRET,
       { expiresIn: "1d" }
     );
-
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
-    await sendVerificationEmail(email, verifyUrl);
+    const sendMail = await sendVerificationEmail(email, verifyUrl);
+    if (sendMail.error) {
+      return res.status(400).json({ error: sendMail.error });
+    }
+    sendMail;
+    console.log("authController:: sendingin mail :", sendMail);
 
     await knex("Users").insert({
       name,
@@ -41,6 +46,8 @@ exports.createUser = async (req, res) => {
       password: hashedPassword,
       gender,
       role: "user",
+      state,
+      lga,
       verification_token: verificationToken,
       is_verified: false,
       created_at: knex.fn.now(),
@@ -63,6 +70,7 @@ exports.createUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log("Login Request Body:: ", req.body);
 
     if (!email || !password)
       return res.status(400).json({ error: "Email and password are required" });
@@ -118,6 +126,7 @@ exports.loginUser = async (req, res) => {
     console.log("This is the cookie name:: ", COOKIE_NAME);
     res.status(200).json({
       success: true,
+      token: token,
       role: account.role, // Still send role in body for frontend immediate use
       message: "Login successful",
     });
@@ -176,22 +185,47 @@ exports.logout = (req, res) => {
 // Middleware - Protect Routes
 // ===============================
 exports.authenticate = (req, res, next) => {
-  const token = req.cookies?.accessToken; // *** Look ONLY for 'accessToken' ***
+  // Check the 'authorization' header (Express lowers the case automatically)
+  const authHeader = req.headers["authorization"];
+  console.log("Authenticate Middleware:: Auth Header:: ", authHeader);
 
-  if (!token) return res.status(401).json({ error: "No token provided" });
+  // Extract the token part from "Bearer <token>"
+  const token = authHeader && authHeader.split(" ")[1];
 
-  // console.log removed for clarity
+  if (!token) {
+    console.log("Blocked by Middleware: No Token found in headers");
+    return res.status(401).json({ error: "No token provided" });
+  }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decodedPayload) => {
-    // Renamed to decodedPayload
-    if (err) return res.status(403).json({ error: "Invalid token" });
-
-    req.user = decodedPayload; // This now contains { userId, role }
-    // req.role = decodedPayload.role; // This line is optional now as role is in req.user
-
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      console.log("Blocked by Middleware: Token invalid", err);
+      return res.status(403).json({ error: "Invalid token" });
+    }
+    req.user = decoded;
     next();
   });
 };
+// exports.authenticate = (req, res, next) => {
+//   // const token = req.cookies?.accessToken || req.cookies?.authToken; // *** Look ONLY for 'accessToken' ***
+//     const authHeader = req.headers['authorization'];
+//     console.log("Authenticate Middleware:: Auth Header:: ", authHeader);
+//   if (!authHeader) return res.status(401).json({ error: "No token provided" });
+
+//   const token = authHeader.split(" ")[1]; // Extract token from "Bearer <token>"
+
+//   // console.log removed for clarity
+
+//   jwt.verify(token, process.env.JWT_SECRET, (err, decodedPayload) => {
+//     // Renamed to decodedPayload
+//     if (err) return res.status(403).json({ error: "Invalid token" });
+
+//     req.user = decodedPayload; // This now contains { userId, role }
+//     // req.role = decodedPayload.role; // This line is optional now as role is in req.user
+
+//     next();
+//   });
+// };
 
 // exports.authenticate = (req, res, next) => {
 //   const cookies = req.cookies;
@@ -232,7 +266,9 @@ exports.getProfile = async (req, res) => {
         "phone",
         "gender",
         "role",
-        "location",
+        "state",
+        "capacity",
+        "lga",
         "age"
       )
       .where({ id: userId, role: role })

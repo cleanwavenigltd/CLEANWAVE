@@ -9,7 +9,7 @@ const {
   addAgent,
 } = require("../controllers/agentsControllers");
 router.post("/register", isAggregator, addAgent);
-router.get("/get",isAggregator,getAgentRequest);
+router.get("/get", authenticate, getAgentRequest);
 //router.get("/delete", isAdmin, getAgentRequest);
 router.get("/get-all", isAdmin, getAll);
 

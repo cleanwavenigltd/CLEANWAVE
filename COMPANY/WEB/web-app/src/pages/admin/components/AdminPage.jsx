@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { clearAuth } from "../../../store/authSlice";
 import { MetricCard } from "../Dashboard";
 import { getAllInfo, adminLogout } from "../../../services/adminService";
 import { getAggregators } from "../../../services/aggregatorservice";
@@ -19,6 +21,7 @@ export default function AdminDashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   // Waste category form state
   const [customCategory, setCustomCategory] = useState("");
@@ -43,6 +46,7 @@ export default function AdminDashboard() {
             total: info.data.users.total,
           });
         } else {
+          dispatch(clearAuth());
           adminLogout();
         }
       } catch (err) {
@@ -128,7 +132,10 @@ export default function AdminDashboard() {
           text: res.message || "Category created successfully.",
         });
       } else {
-        setFormMessage({ type: "error", text: res.message || "Failed to create category." });
+        setFormMessage({
+          type: "error",
+          text: res.message || "Failed to create category.",
+        });
       }
     } catch (err) {
       console.error("Create category error:", err);
@@ -326,10 +333,12 @@ export default function AdminDashboard() {
                       </div>
                     )}
                   </div>
-                  <div className="text-xs text-gray-400">
-                    {cat.createdAt
-                      ? new Date(cat.createdAt).toLocaleString()
-                      : ""}
+                  <div className="text-xs text-gray-500">
+                    {cat.createdAt ? (
+                      new Date(cat.createdAt).toLocaleString()
+                    ) : (
+                      <h1 className="font-bold text-lg">{cat.kg}kg</h1>
+                    )}
                   </div>
                 </div>
               </li>

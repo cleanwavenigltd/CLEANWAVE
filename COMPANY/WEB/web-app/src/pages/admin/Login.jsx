@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { adminLogin } from "../../services/adminService";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../../store/authSlice";
+import { startTokenTimer } from "../../utils/tokenManager";
 import fav from "../../assets/logo.png";
 import Input from "../user/layouts/Input";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { Lock, Mail } from "lucide-react";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -21,9 +26,18 @@ export default function Login() {
     try {
       // assume login returns a Promise
       const res = await adminLogin({ email: email.trim(), password: password });
-      console.log("Admin Login Response:", res.redirect);
+      console.log("Admin Login Response:", res);
       if (res && res.success) {
-        navigate(`${res.redirect || "/"}`);
+        const { token, role } = res;
+        console.log("Admin Login success: ", role);
+
+        // Save to Redux and sessionStorage
+        dispatch(setAuth({ token, role }));
+
+        // Start token timer
+        startTokenTimer(token);
+
+        navigate(`${res.redirect || "/dashboard"}`);
         // optionally persist token if "remember" checked
         // if (remember && res.token) {
         //   localStorage.setItem("authToken", res.token);
@@ -74,31 +88,37 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <label className="block text-sm font-medium text-gray-700">
               Email
-              <Input
-                type="email"
-                placeholder="you@company.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full border px-3 py-2 rounded-md focus:ring-2 focus:ring-[#8CA566] focus:outline-none"
-                required
-                aria-label="Email"
-                disabled={loading}
-              />
+              <div className="relative w-full mb-6">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                  type="email"
+                  placeholder="you@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-1 w-full border px-3 py-2 rounded-md focus:ring-2 focus:ring-[#8CA566] focus:outline-none"
+                  required
+                  aria-label="Email"
+                  disabled={loading}
+                />
+              </div>
             </label>
 
             <label className="block text-sm font-medium text-gray-700 relative">
               Password
               <div className="relative mt-1">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border px-3 py-2 rounded-md pr-10 focus:ring-2 focus:ring-[#8CA566] focus:outline-none"
-                  required
-                  aria-label="Password"
-                  disabled={loading}
-                />
+                <div>
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border px-3 py-2 rounded-md pr-10 focus:ring-2 focus:ring-[#8CA566] focus:outline-none"
+                    required
+                    aria-label="Password"
+                    disabled={loading}
+                  />
+                </div>
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 // import recycleAnimation from '../../../assets/recycle.json';
 import Login from "./Login";
 import Register from "./Register";
-// import ForgotPassword from './ForgotPassword'; // You can add this later
+import ForgotPassword from './ForgotPassword'; // You can add this later
 
 const AuthScreen = () => {
   const [view, setView] = useState("login"); // 'login' | 'register' | 'forgot'
@@ -15,7 +15,7 @@ const AuthScreen = () => {
         <div className="flex-1 flex flex-col justify-center p-6 sm:p-8">
           {view === "login" && <Login onSwitch={setView} />}
           {view === "register" && <Register onSwitch={setView} />}
-          {/* {view === 'forgot' && <ForgotPassword onSwitch={setView} />} */}
+          {view === 'forgot' && <ForgotPassword onSwitch={setView} />}
         {/* </div> */}
       </div>
     </div>

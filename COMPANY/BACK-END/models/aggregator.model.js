@@ -7,7 +7,8 @@ const registerAggregator = async ({
   email,
   gender,
   phone,
-  location,
+  state,
+  lga,
 }) => {
   try {
     const existinAggregator = await knex("Users").where({ email }).first();
@@ -29,7 +30,8 @@ const registerAggregator = async ({
         gender,
         role: "aggregator",
         phone,
-        location,
+        state,
+        lga,
         created_at: knex.fn.now(),
         updated_at: knex.fn.now(),
       })
@@ -67,7 +69,8 @@ const getAggregators = async () => {
         "Users.gender",
         "Users.is_verified",
         "Users.phone",
-        "Users.location",
+        "Users.state",
+        "Users.lga",
         "Users.role",
         "Users.created_at",
         "Users.updated_at",

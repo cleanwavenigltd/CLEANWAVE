@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { walletBalance } from "../../../services/authservice";
-import { getPickupsCount } from "../../../services/pickupService";
+import { getPendingPickups } from "../../../services/pickupService";
 // import { getWasteBank } from "../../../services/wasteservice";
 import { PageContext } from "../../../contexts/PageContext";
 import { getConWasteBank } from "../../../services/wasteservice";
@@ -19,7 +19,7 @@ const HomePage = () => {
         setLoading(true);
         const [pickupRes, walletRes, connWasteResp] =
           await Promise.all([
-            getPickupsCount(),
+            getPendingPickups(),
             // getWasteBank(),
             walletBalance(),
             getConWasteBank(),
@@ -27,7 +27,7 @@ const HomePage = () => {
 
         if (pickupRes.success) {
           console.log("PickupRes Data: ", pickupRes.data);
-          setPickupsCount(pickupRes.data.pickups);
+          setPickupsCount(pickupRes.data.data.length);
         }
         // if (wasteRes.success) {
         //   setWasteBanksCount(wasteRes.wasteBanks.wasteBanks.length);

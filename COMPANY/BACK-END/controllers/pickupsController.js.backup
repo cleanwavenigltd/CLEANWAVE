@@ -1,0 +1,289 @@
+const knex = require("../db/knex");
+const {
+  createPickup,
+  getPickupCount,
+  createWastePickup,
+} = require("../models/pickups.model");
+const { updateBalance } = require("../services/updateBalance");
+
+const getPickupCountRequests = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const pickups = await getPickupCount(userId);
+    // console.log("this is the pickups",pickups);
+    res.status(200).json({ pickups });
+  } catch (err) {
+    // console.log(err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+
+const createPickupRequest = async (req, res) => {
+  try {
+    const { category, agent, subcategory, kg, address } = req.body;
+    const userId = req.user.userId;
+    console.log("userID", req.user);
+    console.log("body", req.body);
+
+    // const Agent = knex("Users").where({ name: agent, role: "agent" }).first();
+
+    console.log("agentId", agent);
+
+    if (!userId || !agent || !kg || !category || !address) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const pickup = await createPickup({
+      userId,
+      agentId: agent,
+      kg,
+      category,
+      subcategory,
+      address,
+    });
+    console.log("pickup creation result:", pickup);
+
+    if (pickup.success) {
+      res.status(201).json({ success: true, data: pickup.message });
+    } else {
+      res.status(400).json({ error: pickup.error });
+    }
+  } catch (err) {
+    console.error("Error creating pickup request:", err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+
+const wastePickupRequest = async (req, res) => {
+  try {
+    const { category, kg, note } = req.body;
+    const userId = req.user.userId;
+
+    if (!userId || !category || !kg) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const pickup = await createWastePickup({
+      userId,
+      category,
+      kg,
+      note,
+    });
+
+    if (pickup.success) {
+      res.status(201).json({ success: true, data: pickup.message });
+    } else {
+      res.status(400).json({ error: pickup.error });
+    }
+  } catch (err) {
+    console.error("Error creating waste pickup request:", err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+
+const getPendingPickups = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const pickups = await knex("Pickups").where({
+      agent_id: userId,
+      status: "pending",
+    });
+    if (!pickups) {
+      console.log("No pickups found for agent:", userId);
+      return res.status(404).json({ error: "No pickups found for this agent" });
+    }
+    console.log("Pickups for agent", userId, ":", pickups);
+    res.status(200).json({ pickups });
+  } catch (err) {
+    console.error("Error fetching agent pickups:", err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+const getAcceptedPickups = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const pickups = await knex("Pickups").where({
+      agent_id: userId,
+      status: "accepted",
+    });
+    if (!pickups) {
+      console.log("No accepted pickups found for agent:", userId);
+      return res
+        .status(404)
+        .json({ error: "No accepted pickups found for this agent" });
+    }
+    console.log("Accepted Pickups for agent", userId, ":", pickups);
+    res.status(200).json({ pickups });
+  } catch (err) {
+    console.error("Error fetching accepted agent pickups:", err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+
+const getDeleveredPickup = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const pickups = await knex("Pickups").where({
+      agent_id: userId,
+      status: "delivered",
+    });
+    if (!pickups) {
+      console.log("No delevered pickups found for agent:", userId);
+      return res
+        .status(404)
+        .json({ error: "No delevered pickups found for this agent" });
+    }
+    console.log("Delevered Pickups for agent", userId, ":", pickups);
+    res.status(200).json({ pickups });
+  } catch (err) {
+    console.error("Error fetching delevered agent pickups:", err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+
+const accepPickup = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    const pickup = await knex("Pickups")
+      .where({ id, agent_id: userId })
+      .first();
+
+    if (!pickup) {
+      return res.status(404).json({ error: "Pickup not found" });
+    }
+
+    await knex("Pickups")
+      .where({ id })
+      .update({ status: "accepted", updated_at: knex.fn.now() });
+
+    res.status(200).json({ success: true, message: "Pickup accepted" });
+  } catch (err) {
+    console.error("Error accepting pickup:", err);
+    res.status(500).json({ error: `Server Error` });
+  }
+};
+const wasteDelivered = async (req, res) => {
+  // Use a transaction to ensure data integrity
+  const trx = await knex.transaction();
+
+  try {
+    const { agent, kg, category } = req.body;
+    const { userId } = req.user; // Admin/Aggregator ID from token
+    const agentId = agent;
+
+    if (!agentId || !kg || !category) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // 1. Find the specific pickup (using the transaction object 'trx')
+    const pickup = await trx("Pickups")
+      .where({
+        agent_id: agentId,
+        kg: kg,
+        category: category,
+        status: "accepted",
+      })
+      .first();
+
+    if (!pickup) {
+      await trx.rollback();
+      return res
+        .status(404)
+        .json({ error: "Matching accepted pickup not found!" });
+    }
+
+    // 2. Get category details for pricing
+    const cat = await trx("Categories").where({ name: category }).first();
+    if (!cat) {
+      await trx.rollback();
+      return res.status(404).json({ error: "Waste category not found" });
+    }
+
+    const totalPayout = cat.prize_per_kg * kg;
+
+    // 3. Update Wallets (Using atomic increments is safer)
+    // Assuming updateBalance is a helper that takes (userId, amount, transaction_object)
+    await updateBalance(pickup.user_id, totalPayout, trx);
+    await updateBalance(agentId, totalPayout, trx);
+
+    // 4. Update Capacity and Status
+    await trx("Users").where({ id: userId }).update({ capacity: kg });
+
+    await trx("Pickups").where({ id: pickup.id }).update({
+      status: "delivered",
+      updated_at: knex.fn.now(),
+    });
+
+    // Commit all changes at once
+    await trx.commit();
+
+    return res.status(200).json({
+      success: true,
+      message: "Waste delivered and balances updated successfully",
+    });
+  } catch (err) {
+    // If anything fails, undo every change made during this request
+    await trx.rollback();
+    console.error("PickupsControllers:: Error", err);
+    return res
+      .status(500)
+      .json({ error: "Server Error during delivery processing" });
+  }
+};
+
+// const wasteDelivered = async (req, res) => {
+//   try {
+//     console.log(req.body);
+//     const { agent, kg, category } = req.body;
+//     const { userId } = req.user;
+//     const agentId = agent;
+//     if (!agentId || !kg || !category) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+//     const pickup = await knex("Pickups")
+//       .where({
+//         agent_id: agentId,
+//         kg: kg,
+//         category: category,
+//         status: "accepted",
+//       })
+//       .first();
+//     console.log("pickupsControllers:176: Pickups :", pickup);
+//     if (!pickup) {
+//       return res.status(404).json({ error: "No pickups found!" });
+//     }
+//     const cat = await knex("Categories").where({ name: category }).first();
+//     // await knex("Wallet")
+//     //   .where({ user_id: pickup.user_id })
+//     //   // .andWhere({ user_id: agentId })
+//     //   .update({ balance: cat.prize_per_kg, updated_at: knex.fn.now() });
+//     const addUserBalance = updateBalance(pickup.user_id, cat.prize_per_kg);
+//     const addAgentBalance = updateBalance(agentId, cat.prize_per_kg);
+//     if (!addUserBalance || !addAgentBalance) {
+//       return res.status(404).json({ error: "No wallete Found" });
+//     }
+//     await knex("Users").where({ id: userId }).update({ capacity: kg });
+//     await knex("Pickups")
+//       .where({ id: pickup.id })
+//       .update({ status: "delivered", updated_at: knex.fn.now() });
+//     return res
+//       .status(200)
+//       .json({ success: true, message: "waste delivered successfull" });
+//   } catch (err) {
+//     console.log("PickupsControllers:: Error", err);
+//     return res.status(500).json({ error: "Server Error" });
+//   }
+// };
+
+module.exports = {
+  getPickupCountRequests,
+  createPickupRequest,
+  wastePickupRequest,
+  getPendingPickups,
+  getAcceptedPickups,
+  getDeleveredPickup,
+  accepPickup,
+  wasteDelivered,
+};

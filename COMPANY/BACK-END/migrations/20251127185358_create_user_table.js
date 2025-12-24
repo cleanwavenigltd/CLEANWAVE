@@ -19,9 +19,11 @@ exports.up = function (knex) {
     table.string("password").notNullable();
     table.string("gender").notNullable();
     table.string("role").defaultTo("user");
-    table.string("location").nullable();
-    table.string("age").nullable();
-    table.string("capacity").nullable();
+    table.string("state").nullable();
+    table.string("lga").nullable();
+    table.string("address").nullable();
+    table.integer("age").nullable();
+    table.integer("capacity").nullable().defaultTo(0);
     table
       .integer("created_by")
       .unsigned()

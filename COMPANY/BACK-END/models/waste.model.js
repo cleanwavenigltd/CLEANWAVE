@@ -26,7 +26,6 @@ const registerWasteBank = async ({
     const aggregator = await knex("Users").where({ id: aggregatorId }).first();
     if (aggregator) {
       console.log("waste.model:: Aggregator Found: ", aggregator.role);
-      const location = aggregator.location;
 
       const [wasteBank] = await knex("Users")
         .insert({
@@ -37,7 +36,8 @@ const registerWasteBank = async ({
           password,
           gender,
           role: "waste",
-          location,
+          state: aggregator.state,
+          lga: aggregator.lga,
           capacity: 0,
           is_verified: false,
           created_at: knex.fn.now(),
@@ -85,7 +85,8 @@ const getAllWasteBanks = async () => {
         "Users.gender",
         "Users.phone",
         "Users.is_verified",
-        "Users.location",
+        "Users.state",
+        "Users.lga",
         "Users.capacity",
         "Users.created_at",
         "Users.updated_at",

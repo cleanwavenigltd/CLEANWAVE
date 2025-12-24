@@ -1,11 +1,9 @@
-import axios from "axios";
+import api from "../utils/api";
 
-axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL;
-axios.defaults.withCredentials = true;
 
 export const register = async (userData) => {
   try {
-    const response = await axios.post("/aggregator/register", userData);
+    const response = await api.post("/aggregator/register", userData);
     console.log("Aggregator register response:", response);
     return response.data;
   } catch (error) {
@@ -15,7 +13,7 @@ export const register = async (userData) => {
 };
 export const getAggregators = async () => {
   try {
-    const response = await axios.get("/aggregator/get");
+    const response = await api.get("/aggregator/get");
     return response.data;
   } catch (error) {
     console.error("Error fetching aggregators:", error);
@@ -25,7 +23,7 @@ export const getAggregators = async () => {
 
 export const getAgent = async () => {
   try {
-    const response = await axios.get("/agents/get");
+    const response = await api.get("/agents/get");
 
     return response.data;
   } catch (error) {

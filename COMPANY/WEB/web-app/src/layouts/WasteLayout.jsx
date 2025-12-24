@@ -6,8 +6,13 @@ import Pickups from "../pages/waste/components/Pickups";
 import WalletPage from "../pages/waste/components/Wallet";
 import Profile from "../pages/waste/components/Profile";
 import { PageProvider } from "../contexts/PageContext";
+import { useUser } from "../contexts/UserContext";
 export default function WasteLayout() {
   const [activeTab, setActiveTab] = useState("home");
+  const { user, isLoading, role } = useUser();
+  if (isLoading) {
+    return <div>Loading...</div>; // Show a loader while authentication is checked
+  }
 
   const menu = [
     { id: "home", label: "Home", icon: <Home size={25} /> },
@@ -63,9 +68,9 @@ export default function WasteLayout() {
   };
 
   return (
-    <PageProvider value={{activeTab,setActiveTab}}>
+    <PageProvider value={{ activeTab, setActiveTab }}>
       <div className="min-h-screen bg-gray-100 flex flex-col">
-        <Header userName="Amir" role="Wastebank" />
+        <Header userName={user?.name || "user"} role={role || "guest"} />
         <div className="flex-1">{renderScreen()}</div>
 
         <nav className="h-[10%]  border-t-4 border-gray-200 fixed bottom-0 left-0 right-0 z-50 bg-white flex justify-around">

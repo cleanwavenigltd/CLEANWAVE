@@ -11,6 +11,7 @@ import {
 import { logout } from "../../../services/authservice";
 import { useNavigate } from "react-router-dom";
 import { getProfile, updateProfile } from "../../../services/authservice";
+// import { useUser } from "../../../contexts/UserContext";
 
 const Profile = () => {
   const [user, setUser] = useState(null);

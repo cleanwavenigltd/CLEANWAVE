@@ -1,11 +1,9 @@
-import axios from "axios";
+import api from "../utils/api";
 
-axios.defaults.baseURL = import.meta.env.VITE_APP_BASE_URL;
-axios.defaults.withCredentials = true;
 
 export const registerAgent = async (userData) => {
   try {
-    const response = await axios.post("/agents/register", userData);
+    const response = await api.post("/agents/register", userData);
 
     return { success: true, data: response.data };
   } catch (error) {
@@ -19,7 +17,7 @@ export const registerAgent = async (userData) => {
 
 export const getAgents = async () => {
   try {
-    const response = await axios.get("/agents/get-all");
+    const response = await api.get("/agents/get-all");
     return response.data;
   } catch (error) {
     return error.message || "Failed to fetch Agents";

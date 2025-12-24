@@ -1,12 +1,12 @@
 import React from "react";
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { walletBalance } from "../../../services/authservice";
 import { getPickupsCount } from "../../../services/pickupService";
 // import PageContext from "../../../contexts/PageContext";
 import Pickups from "./Pickups";
 import { logout } from "../../../utils/auth";
 
-const HomePage = () => {
+const HomePage = ({ onSwitch }) => {
   const [balance, setBalance] = useState(0);
   const [pickupsCount, setPickupsCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,7 @@ const HomePage = () => {
         if (pickupsRes || walletRes) {
           console.log(pickupsRes);
           if (pickupsRes.success) {
-            setPickupsCount(pickupsRes.data.pickups);
+            setPickupsCount(pickupsRes.data.data);
           }
           if (walletRes.success) {
             setBalance(walletRes.balance);
@@ -82,14 +82,17 @@ const HomePage = () => {
           >
             Request Pickup
           </button>
-          <button className="bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition">
+          <button
+            onClick={() => onSwitch("history")}
+            className="bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition"
+          >
             View History
           </button>
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-xl shadow-md p-6">
+      {/* <div className="bg-white rounded-xl shadow-md p-6">
         <h2 className="text-lg font-semibold mb-4 text-gray-800">
           Recent Activity
         </h2>
@@ -109,7 +112,7 @@ const HomePage = () => {
             </span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {showPickups && <Pickups onClose={() => setShowPickups(false)} />}
     </div>

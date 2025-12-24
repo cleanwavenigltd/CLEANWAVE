@@ -4,10 +4,13 @@ import {
   WifiIcon,
   PhoneIcon,
   AlertCircle,
+  ArrowDownCircle,
+  Loader,
   CheckCircle,
 } from "lucide-react";
 import { useEffect } from "react";
 import { walletBalance } from "../../../services/authservice";
+import { NIGERIAN_BANKS } from "../../../data/banks";
 
 const Wallet = () => {
   const [balance, setBalance] = useState(0);
@@ -35,6 +38,13 @@ const Wallet = () => {
       status: "completed",
     },
   ]);
+  const [withdrawalForm, setWithdrawalForm] = useState({
+    bankCode: "",
+    accountNumber: "",
+    accountName: "", // Usually fetched via API
+    amount: "",
+    pin: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -150,6 +160,48 @@ const Wallet = () => {
     }
   };
 
+  const handleWithdrawal = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    // Professional Validation
+    const errors = {};
+    if (!withdrawalForm.bankCode) errors.bankCode = "Select a bank";
+    if (withdrawalForm.accountNumber.length !== 10)
+      errors.accountNumber = "Invalid account number";
+    if (!withdrawalForm.amount || parseFloat(withdrawalForm.amount) < 100)
+      errors.amount = "Minimum withdrawal is ₦100";
+    if (parseFloat(withdrawalForm.amount) > balance)
+      errors.amount = "Insufficient wallet balance";
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // API call to /withdraw would go here
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
+
+      setBalance((prev) => prev - parseFloat(withdrawalForm.amount));
+      setSuccess("✅ Withdrawal request submitted successfully!");
+      setWithdrawalForm({
+        bankCode: "",
+        accountNumber: "",
+        accountName: "",
+        amount: "",
+        pin: "",
+      });
+      setActiveTab("transactions");
+    } catch (err) {
+      setError("Withdrawal failed. Please check your connection.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="mt-1 min-h-screen flex flex-col relative pb-24 bg-gray-50">
       {/* Header */}
@@ -171,6 +223,7 @@ const Wallet = () => {
               </button>
               <button
                 disabled={loading}
+                onClick={() => setActiveTab("withdraw")}
                 className="bg-[#8CA566] text-white py-3 rounded-lg font-semibold hover:bg-green-900 transition disabled:opacity-50"
               >
                 Withdraw
@@ -202,6 +255,7 @@ const Wallet = () => {
         {[
           { key: "purchase", label: "Buy Airtime/Data" },
           { key: "transactions", label: "History" },
+          { key: "withdraw", label: "Withdraw" },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -351,6 +405,109 @@ const Wallet = () => {
           </form>
         )}
 
+        {activeTab === "withdraw" && (
+          <form
+            onSubmit={handleWithdrawal}
+            className="bg-white p-6 rounded-2xl shadow-sm space-y-4"
+          >
+            <h2 className="font-bold text-gray-800 flex items-center gap-2">
+              <ArrowDownCircle className="text-[#8CA566]" /> Withdraw to Bank
+            </h2>
+
+            <div>
+              <label className="text-xs font-bold text-gray-500 uppercase">
+                Select Bank
+              </label>
+              <select
+                className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                value={withdrawalForm.bankCode}
+                onChange={(e) =>
+                  setWithdrawalForm({
+                    ...withdrawalForm,
+                    bankCode: e.target.value,
+                  })
+                }
+              >
+                <option value="">Choose Bank...</option>
+                {/* Dynamically Map through the imported list */}
+                {NIGERIAN_BANKS.map((bank) => (
+                  <option key={bank.code} value={bank.code}>
+                    {bank.name}
+                  </option>
+                ))}
+              </select>
+              {formErrors.bankCode && (
+                <p className="text-red-500 text-[10px] mt-1">
+                  {formErrors.bankCode}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-gray-500 uppercase">
+                Account Number
+              </label>
+              <input
+                type="number"
+                placeholder="0123456789"
+                className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                value={withdrawalForm.accountNumber}
+                onChange={(e) =>
+                  setWithdrawalForm({
+                    ...withdrawalForm,
+                    accountNumber: e.target.value,
+                  })
+                }
+              />
+              {formErrors.accountNumber && (
+                <p className="text-red-500 text-[10px] mt-1">
+                  {formErrors.accountNumber}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-gray-500 uppercase">
+                Amount (₦)
+              </label>
+              <input
+                type="number"
+                placeholder="Min ₦100"
+                className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                value={withdrawalForm.amount}
+                onChange={(e) =>
+                  setWithdrawalForm({
+                    ...withdrawalForm,
+                    amount: e.target.value,
+                  })
+                }
+              />
+              {formErrors.amount && (
+                <p className="text-red-500 text-[10px] mt-1">
+                  {formErrors.amount}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#8CA566] text-white py-4 rounded-xl font-bold hover:shadow-lg transition-all flex justify-center items-center gap-2"
+            >
+              {loading ? (
+                <Loader className="animate-spin" size={20} />
+              ) : (
+                "Confirm Withdrawal"
+              )}
+            </button>
+
+            <p className="text-[10px] text-center text-gray-400">
+              Note: Transfers to external banks may take up to 30 minutes to
+              reflect.
+            </p>
+          </form>
+        )}
+
         {activeTab === "transactions" && (
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-bold mb-4 text-gray-800">
@@ -391,3 +548,184 @@ const Wallet = () => {
 };
 
 export default Wallet;
+
+// import React, { useState, useCallback, useEffect } from "react";
+// import {
+//   WalletIcon,
+//   AlertCircle,
+//   CheckCircle,
+//   Loader,
+//   ArrowDownCircle,
+//   Building2,
+// } from "lucide-react";
+// import { walletBalance } from "../../../services/authservice";
+
+// const Wallet = () => {
+//   const [balance, setBalance] = useState(0);
+//   const [activeTab, setActiveTab] = useState("purchase"); // purchase, withdraw, transactions
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+//   const [success, setSuccess] = useState(null);
+
+//   // Withdrawal Form State
+//   const [withdrawalForm, setWithdrawalForm] = useState({
+//     bankCode: "",
+//     accountNumber: "",
+//     accountName: "", // Usually fetched via API
+//     amount: "",
+//     pin: ""
+//   });
+
+//   const [formErrors, setFormErrors] = useState({});
+
+//   // ... (Your existing fetchWalletData and purchase logic)
+
+//   /**
+//    * Handle Withdrawal Submission
+//    */
+// const handleWithdrawal = async (e) => {
+//   e.preventDefault();
+//   setError(null);
+//   setSuccess(null);
+
+//   // Professional Validation
+//   const errors = {};
+//   if (!withdrawalForm.bankCode) errors.bankCode = "Select a bank";
+//   if (withdrawalForm.accountNumber.length !== 10) errors.accountNumber = "Invalid account number";
+//   if (!withdrawalForm.amount || parseFloat(withdrawalForm.amount) < 100)
+//       errors.amount = "Minimum withdrawal is ₦100";
+//   if (parseFloat(withdrawalForm.amount) > balance) errors.amount = "Insufficient wallet balance";
+
+//   if (Object.keys(errors).length > 0) {
+//     setFormErrors(errors);
+//     return;
+//   }
+
+//   setLoading(true);
+//   try {
+//     // API call to /withdraw would go here
+//     await new Promise(resolve => setTimeout(resolve, 2000)); // Mock delay
+
+//     setBalance(prev => prev - parseFloat(withdrawalForm.amount));
+//     setSuccess("✅ Withdrawal request submitted successfully!");
+//     setWithdrawalForm({ bankCode: "", accountNumber: "", accountName: "", amount: "", pin: "" });
+//     setActiveTab("transactions");
+//   } catch (err) {
+//     setError("Withdrawal failed. Please check your connection.");
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+//   return (
+//     <div className="mt-1 min-h-screen flex flex-col relative pb-24 bg-gray-50">
+//       {/* Wallet Balance Header */}
+//       <div className="bg-gray-800 text-white py-10 rounded-xl shadow-xl mx-4 mt-4">
+//         <div className="text-center">
+//           <p className="text-xs uppercase font-bold opacity-70">Available Balance</p>
+//           <h1 className="text-4xl font-black mt-2">₦{balance.toLocaleString()}</h1>
+//           <div className="flex justify-center gap-4 mt-6 px-10">
+//               <button
+//                 onClick={() => setActiveTab("purchase")}
+//                 className="flex-1 bg-white text-gray-900 py-2 rounded-lg text-sm font-bold"
+//               >
+//                 Top Up
+//               </button>
+//               <button
+//                 onClick={() => setActiveTab("withdraw")}
+//                 className="flex-1 bg-[#8CA566] text-white py-2 rounded-lg text-sm font-bold"
+//               >
+//                 Withdraw
+//               </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Tabs Navigation */}
+//       <div className="flex gap-1 bg-white shadow-sm mt-6 rounded-xl mx-4 p-1 border border-gray-200">
+//         {['purchase', 'withdraw', 'transactions'].map((tab) => (
+//           <button
+//             key={tab}
+//             onClick={() => setActiveTab(tab)}
+//             className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all ${
+//               activeTab === tab ? "bg-[#8CA566] text-white" : "text-gray-500"
+//             }`}
+//           >
+//             {tab.toUpperCase()}
+//           </button>
+//         ))}
+//       </div>
+
+//       {/* Content Area */}
+//       <div className="px-4 mt-6">
+//         {error && <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-100 rounded-lg flex items-center gap-2 text-sm"><AlertCircle size={16}/>{error}</div>}
+//         {success && <div className="mb-4 p-3 bg-green-50 text-green-700 border border-green-100 rounded-lg flex items-center gap-2 text-sm"><CheckCircle size={16}/>{success}</div>}
+
+//         {/* WITHDRAWAL FORM */}
+//         {activeTab === "withdraw" && (
+//           <form onSubmit={handleWithdrawal} className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
+//             <h2 className="font-bold text-gray-800 flex items-center gap-2">
+//               <ArrowDownCircle className="text-[#8CA566]" /> Withdraw to Bank
+//             </h2>
+
+//             <div>
+//               <label className="text-xs font-bold text-gray-500 uppercase">Select Bank</label>
+//               <select
+//                 className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+//                 value={withdrawalForm.bankCode}
+//                 onChange={(e) => setWithdrawalForm({...withdrawalForm, bankCode: e.target.value})}
+//               >
+//                 <option value="">Choose Bank...</option>
+//                 <option value="058">GTBank</option>
+//                 <option value="011">First Bank</option>
+//                 <option value="044">Access Bank</option>
+//                 <option value="057">Zenith Bank</option>
+//               </select>
+//               {formErrors.bankCode && <p className="text-red-500 text-[10px] mt-1">{formErrors.bankCode}</p>}
+//             </div>
+
+//             <div>
+//               <label className="text-xs font-bold text-gray-500 uppercase">Account Number</label>
+//               <input
+//                 type="number"
+//                 placeholder="0123456789"
+//                 className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+//                 value={withdrawalForm.accountNumber}
+//                 onChange={(e) => setWithdrawalForm({...withdrawalForm, accountNumber: e.target.value})}
+//               />
+//               {formErrors.accountNumber && <p className="text-red-500 text-[10px] mt-1">{formErrors.accountNumber}</p>}
+//             </div>
+
+//             <div>
+//               <label className="text-xs font-bold text-gray-500 uppercase">Amount (₦)</label>
+//               <input
+//                 type="number"
+//                 placeholder="Min ₦100"
+//                 className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+//                 value={withdrawalForm.amount}
+//                 onChange={(e) => setWithdrawalForm({...withdrawalForm, amount: e.target.value})}
+//               />
+//               {formErrors.amount && <p className="text-red-500 text-[10px] mt-1">{formErrors.amount}</p>}
+//             </div>
+
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               className="w-full bg-[#8CA566] text-white py-4 rounded-xl font-bold hover:shadow-lg transition-all flex justify-center items-center gap-2"
+//             >
+//               {loading ? <Loader className="animate-spin" size={20}/> : "Confirm Withdrawal"}
+//             </button>
+
+//             <p className="text-[10px] text-center text-gray-400">
+//               Note: Transfers to external banks may take up to 30 minutes to reflect.
+//             </p>
+//           </form>
+//         )}
+
+//         {/* Existing Purchase Form and Transactions... */}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Wallet;

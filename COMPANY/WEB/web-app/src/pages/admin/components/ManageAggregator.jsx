@@ -4,7 +4,6 @@ import { formatCurrency } from "../Dashboard";
 import { updateProfile } from "../../../services/authservice";
 import { getAggregators, register } from "../../../services/aggregatorservice";
 import UserModal from "../layouts/modals";
-
 function Aggregator() {
   const [users, setUsers] = useState([]);
   const [query, setQuery] = useState("");
@@ -19,7 +18,7 @@ function Aggregator() {
     try {
       const response = await getAggregators();
       if (response.success) {
-        console.log("Fetched Aggregators:", response);
+        console.log("Fetched Aggregators:", response.aggregator.aggregators);
         setUsers(response.aggregator.aggregators || []);
       }
     } catch (error) {
@@ -149,11 +148,11 @@ function Aggregator() {
           title="Aggregator"
           onClose={() => {
             setShowModal(false);
+            setEditingUser(null);
             fetchData();
           }}
-          setUsers={setUsers}
-          reg={updateProfile}
           verify={true}
+          reg={editingUser ? updateProfile : register}
         />
       )}
     </div>

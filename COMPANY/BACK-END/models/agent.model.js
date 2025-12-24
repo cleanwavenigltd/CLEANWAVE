@@ -1,6 +1,5 @@
 const knex = require("../db/knex");
 
-
 const getAllAgents = async () => {
   try {
     const agents = await knex("Users")
@@ -12,7 +11,8 @@ const getAllAgents = async () => {
         "Users.email",
         "Users.gender",
         "Users.phone",
-        "Users.location",
+        "Users.state",
+        "Users.lga",
         "Users.age",
         "Users.is_verified",
         "Users.capacity",
@@ -54,10 +54,10 @@ const registerAgent = async ({
       .where({ id: aggregatorId, role: "aggregator" })
       .first();
     if (aggregator) {
-      const location = aggregator.location;
+      // const location = aggregator.location;
       console.log("agent.model:: Aggregator found: ", aggregator);
 
-      const [wasteBank] = await knex("Users")
+      const [Agent] = await knex("Users")
         .insert({
           created_by: aggregatorId,
           name,
@@ -68,21 +68,22 @@ const registerAgent = async ({
           gender,
           role: "agent",
           is_verified: false,
-          location,
+          state: aggregator.state,
+          lga: aggregator.lga,
           created_at: knex.fn.now(),
           updated_at: knex.fn.now(),
         })
         .returning("*");
       const existingWallet = await knex("Wallet")
         .where({
-          user_id: wasteBank.id,
+          user_id: Agent.id,
         })
         .first();
 
       if (existingWallet) {
       } else {
         await knex("Wallet").insert({
-          user_id: wasteBank.id,
+          user_id: Agent.id,
           balance: 0,
           created_at: knex.fn.now(),
           updated_at: knex.fn.now(),
