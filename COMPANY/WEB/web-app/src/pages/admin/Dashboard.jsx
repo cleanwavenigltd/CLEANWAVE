@@ -9,6 +9,7 @@ import {
   User,
   Users,
   Truck,
+  RecycleIcon,
   Archive,
   Box,
   CreditCard,
@@ -24,9 +25,11 @@ import Transactions from "./components/Transactions";
 import WasteBank from "./components/ManageWasteBank";
 import AdminDashboard from "./components/AdminPage";
 import Aggregator from "./components/ManageAggregator";
+import Waste from "./components/ManageWaste";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: <Home size={18} /> },
+  { id: "waste", label: "Waste Management", icon: <RecycleIcon size={18} /> },
   { id: "profile", label: "Profile", icon: <User size={18} /> },
   { id: "users", label: "Users", icon: <Users size={18} /> },
   { id: "agents", label: "Agents", icon: <Truck size={18} /> },
@@ -55,6 +58,8 @@ export default function Dashboard() {
 
   const renderPage = () => {
     switch (route) {
+      case "waste":
+        return <Waste />;
       case "profile":
         return "Profile";
       case "users":

@@ -47,9 +47,9 @@ export default function App() {
             <Route
               path="/dashboard"
               element={
-                <AdminProtect>
+                // <AdminProtect>
                   <Dashboard />
-                </AdminProtect>
+                // </AdminProtect>
               }
             />
             {/* unprotedted Home before Testing*/}

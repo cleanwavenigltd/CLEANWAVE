@@ -49,3 +49,25 @@ export const getAllInfo = async () => {
     return error.message || "Failed to fetch feMale users";
   }
 };
+
+export const getAllWasteData = async () => {
+  try {
+    const response = await api.get("/admin/waste-data");
+
+    return response.data;
+  } catch (error) {
+    return error.message || "Failed to fetch Waste Data";
+  }
+};
+
+export const updateWasteStatus = async (wasteId, newStatus) => {
+  try {
+    const response = await api.put(`/admin/waste-status/${wasteId}`, {
+      status: newStatus,
+    });
+
+    return response.data;
+  } catch (error) {
+    return error.message || "Failed to update Waste Status";
+  }
+};
