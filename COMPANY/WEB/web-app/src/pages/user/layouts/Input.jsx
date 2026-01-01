@@ -20,11 +20,11 @@ function Input({
         required={required}
         // className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
 
-        className="pl-10 py-3 pr-4 bg-transparent peer h-10 w-full text-gray-900 placeholder-transparent border border-gray-300 rounded-md px-3 pt-5 pb-2 focus:outline-none focus:ring-3 focus:ring-[#8CA566] focus:border-[#8CA566]"
+        className="pl-10 py-3 pr-4 bg-transparent peer h-15 w-full text-gray-900 placeholder-transparent border border-gray-300 rounded-md px-3 pt-5 pb-2 focus:outline-none focus:ring-3 focus:ring-[#8CA566] focus:border-[#8CA566]"
       />
       <label
         htmlFor={name}
-        className="absolute left-9 -top-4 bg-gray-50 px-1 text-gray-500 text-[10px] cursor-pointer transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-3 peer-focus:text-[10px] peer-focus:text-[#8CA566]"
+        className="absolute left-9 -top-2 bg-white px-1 text-gray-500 text-[10px] cursor-pointer transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-3 peer-focus:text-[10px] peer-focus:text-[#8CA566]"
       >
         {label}
       </label>

@@ -46,8 +46,8 @@ export default function ForgotPassword({ onSwitch }) {
   );
 
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-h-screen shadow-lg border  p-8 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="bg-white p-8 rounded-2xl w-full max-w-md shadow-lg">
         {/* Header - Semantic & Clear */}
         <div className="mb-8">
           <h1 className="font-bold text-2xl text-gray-900">Forgot password</h1>
@@ -121,7 +121,7 @@ export default function ForgotPassword({ onSwitch }) {
             &larr; Back to Login
           </button>
         </div>
-      {/* </div> */}
+      </div> 
     </div>
   );
 }

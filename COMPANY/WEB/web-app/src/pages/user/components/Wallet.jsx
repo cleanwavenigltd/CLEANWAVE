@@ -5,38 +5,44 @@ import {
   PhoneIcon,
   AlertCircle,
   ArrowDownCircle,
+  ArrowLeft,
   Loader,
   CheckCircle,
 } from "lucide-react";
 import { useEffect } from "react";
-import { walletBalance } from "../../../services/authservice";
+import {
+  walletBalance,
+  getTransactionHistory,
+  checkAccountNumber,
+  transferFunds,
+} from "../../../services/authservice";
 import { NIGERIAN_BANKS } from "../../../data/banks";
 
 const Wallet = () => {
   const [balance, setBalance] = useState(0);
   const [activeTab, setActiveTab] = useState("purchase");
   const [transactions, setTransactions] = useState([
-    {
-      id: 1,
-      type: "Deposit",
-      amount: 10000,
-      date: "2025-11-03",
-      status: "completed",
-    },
-    {
-      id: 2,
-      type: "Airtime Purchase",
-      amount: -1000,
-      date: "2025-11-04",
-      status: "completed",
-    },
-    {
-      id: 3,
-      type: "Data Bundle",
-      amount: -500,
-      date: "2025-11-05",
-      status: "completed",
-    },
+    // {
+    //   id: 1,
+    //   type: "Deposit",
+    //   amount: 10000,
+    //   date: "2025-11-03",
+    //   status: "completed",
+    // },
+    // {
+    //   id: 2,
+    //   type: "Airtime Purchase",
+    //   amount: -1000,
+    //   date: "2025-11-04",
+    //   status: "completed",
+    // },
+    // {
+    //   id: 3,
+    //   type: "Data Bundle",
+    //   amount: -500,
+    //   date: "2025-11-05",
+    //   status: "completed",
+    // },
   ]);
   const [withdrawalForm, setWithdrawalForm] = useState({
     bankCode: "",
@@ -48,6 +54,7 @@ const Wallet = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [verified, setVerified] = useState(false);
 
   useEffect(() => {
     fetchWalletData();
@@ -57,10 +64,13 @@ const Wallet = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await walletBalance();
+      const [res, txHistory] = await Promise.all([
+        walletBalance(),
+        getTransactionHistory(),
+      ]);
       if (res.success) {
         setBalance(res.balance);
-        // setTransactions(res.data.transactions || []);
+        setTransactions(txHistory.data || []);
       } else {
         setError("Failed to load wallet data");
       }
@@ -160,6 +170,29 @@ const Wallet = () => {
     }
   };
 
+  const verifyAccountNumber = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    try {
+      const res = await checkAccountNumber(withdrawalForm);
+      if (res.success) {
+        setSuccess("Account verified successfully");
+        setWithdrawalForm((prev) => ({
+          ...prev,
+          accountName: res.accountName,
+        }));
+        setVerified(true);
+      } else {
+        setError("Account verification failed");
+        setVerified(false);
+      }
+    } catch (err) {
+      setError("Network error during account verification");
+      setVerified(false);
+    }
+  };
+
   const handleWithdrawal = async (e) => {
     e.preventDefault();
     setError(null);
@@ -183,18 +216,23 @@ const Wallet = () => {
     setLoading(true);
     try {
       // API call to /withdraw would go here
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
-
-      setBalance((prev) => prev - parseFloat(withdrawalForm.amount));
-      setSuccess("✅ Withdrawal request submitted successfully!");
-      setWithdrawalForm({
-        bankCode: "",
-        accountNumber: "",
-        accountName: "",
-        amount: "",
-        pin: "",
-      });
-      setActiveTab("transactions");
+      // await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
+      const res = await transferFunds(withdrawalForm);
+      if (!res.success) {
+        setError(res.error || "Withdrawal failed. Please try again.");
+        setLoading(false);
+      } else {
+        setBalance((prev) => prev - parseFloat(withdrawalForm.amount));
+        setSuccess("✅ Withdrawal request submitted successfully!");
+        setWithdrawalForm({
+          bankCode: "",
+          accountNumber: "",
+          accountName: "",
+          amount: "",
+          pin: "",
+        });
+        setActiveTab("transactions");
+      }
     } catch (err) {
       setError("Withdrawal failed. Please check your connection.");
     } finally {
@@ -407,87 +445,107 @@ const Wallet = () => {
 
         {activeTab === "withdraw" && (
           <form
-            onSubmit={handleWithdrawal}
+            onSubmit={verified ? handleWithdrawal : verifyAccountNumber}
             className="bg-white p-6 rounded-2xl shadow-sm space-y-4"
           >
             <h2 className="font-bold text-gray-800 flex items-center gap-2">
               <ArrowDownCircle className="text-[#8CA566]" /> Withdraw to Bank
             </h2>
-
-            <div>
-              <label className="text-xs font-bold text-gray-500 uppercase">
-                Select Bank
-              </label>
-              <select
-                className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
-                value={withdrawalForm.bankCode}
-                onChange={(e) =>
-                  setWithdrawalForm({
-                    ...withdrawalForm,
-                    bankCode: e.target.value,
-                  })
-                }
+            {verified && (
+              <button
+                onClick={() => setVerified(false)}
+                className="group flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-[#8CA566] transition-all"
               >
-                <option value="">Choose Bank...</option>
-                {/* Dynamically Map through the imported list */}
-                {NIGERIAN_BANKS.map((bank) => (
-                  <option key={bank.code} value={bank.code}>
-                    {bank.name}
-                  </option>
-                ))}
-              </select>
-              {formErrors.bankCode && (
-                <p className="text-red-500 text-[10px] mt-1">
-                  {formErrors.bankCode}
+                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                Back
+              </button>
+            )}
+            {!verified && (
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase">
+                  Select Bank
+                </label>
+                <select
+                  className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                  value={withdrawalForm.bankCode}
+                  onChange={(e) =>
+                    setWithdrawalForm({
+                      ...withdrawalForm,
+                      bankCode: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Choose Bank...</option>
+                  {/* Dynamically Map through the imported list */}
+                  {NIGERIAN_BANKS.map((bank) => (
+                    <option key={bank.code} value={bank.code}>
+                      {bank.name}
+                    </option>
+                  ))}
+                </select>
+                {formErrors.bankCode && (
+                  <p className="text-red-500 text-[10px] mt-1">
+                    {formErrors.bankCode}
+                  </p>
+                )}
+              </div>
+            )}
+            {!verified && (
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase">
+                  Account Number
+                </label>
+                <input
+                  type="number"
+                  placeholder="0123456789"
+                  className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                  value={withdrawalForm.accountNumber}
+                  onChange={(e) =>
+                    setWithdrawalForm({
+                      ...withdrawalForm,
+                      accountNumber: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.accountNumber && (
+                  <p className="text-red-500 text-[10px] mt-1">
+                    {formErrors.accountNumber}
+                  </p>
+                )}
+              </div>
+            )}
+            {verified && (
+              <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex gap-2">
+                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <p className="text-sm text-green-700">
+                  {withdrawalForm.accountName}
                 </p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-xs font-bold text-gray-500 uppercase">
-                Account Number
-              </label>
-              <input
-                type="number"
-                placeholder="0123456789"
-                className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
-                value={withdrawalForm.accountNumber}
-                onChange={(e) =>
-                  setWithdrawalForm({
-                    ...withdrawalForm,
-                    accountNumber: e.target.value,
-                  })
-                }
-              />
-              {formErrors.accountNumber && (
-                <p className="text-red-500 text-[10px] mt-1">
-                  {formErrors.accountNumber}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="text-xs font-bold text-gray-500 uppercase">
-                Amount (₦)
-              </label>
-              <input
-                type="number"
-                placeholder="Min ₦100"
-                className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
-                value={withdrawalForm.amount}
-                onChange={(e) =>
-                  setWithdrawalForm({
-                    ...withdrawalForm,
-                    amount: e.target.value,
-                  })
-                }
-              />
-              {formErrors.amount && (
-                <p className="text-red-500 text-[10px] mt-1">
-                  {formErrors.amount}
-                </p>
-              )}
-            </div>
+              </div>
+            )}
+            {verified && (
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase">
+                  Amount (₦)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Min ₦100"
+                  className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                  value={withdrawalForm.amount}
+                  onChange={(e) =>
+                    setWithdrawalForm({
+                      ...withdrawalForm,
+                      amount: e.target.value,
+                    })
+                  }
+                />
+                {formErrors.amount && (
+                  <p className="text-red-500 text-[10px] mt-1">
+                    {formErrors.amount}
+                  </p>
+                )}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -496,8 +554,10 @@ const Wallet = () => {
             >
               {loading ? (
                 <Loader className="animate-spin" size={20} />
-              ) : (
+              ) : verified ? (
                 "Confirm Withdrawal"
+              ) : (
+                "Search Account"
               )}
             </button>
 

@@ -99,10 +99,10 @@
 //           </div>
 //         )}
 //         {success && (
-//           <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex gap-2">
-//             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-//             <p className="text-sm text-green-700">{success}</p>
-//           </div>
+          // <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex gap-2">
+          //   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+          //   <p className="text-sm text-green-700">{success}</p>
+          // </div>
 //         )}
 
 //         <form onSubmit={handleSubmit}>
@@ -310,8 +310,8 @@ export default function Register({ onSwitch }) {
   };
 
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-gray-50 py-[-30px] ">
-      <div className="min-h-screen   rounded-2xl w-[100%]  ">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-2">
+      <div className="bg-white p-3 rounded-2xl w-full max-w-md shadow-lg">
         <div className="flex justify-center mb-4">
           <img src={fav} alt="Logo" className="w-20 h-24" />
         </div>
@@ -481,6 +481,6 @@ export default function Register({ onSwitch }) {
           </button>
         </div>
       </div>
-    // </div>
+    </div>
   );
 }

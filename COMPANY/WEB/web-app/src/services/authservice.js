@@ -79,3 +79,38 @@ export const walletBalance = async () => {
     return error.message || "No data found";
   }
 };
+
+export const checkAccountNumber = async (accountNumber) => {
+  try {
+    const response = await api.post("/transactions/verify-account", {
+      accountNumber,
+    });
+    console.log("Check Account Number Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error checking account number:", error);
+    return error.response?.data || "Account check failed";
+  }
+};
+
+export const transferFunds = async (transferData) => {
+  try {
+    const response = await api.post("/transactions/transfer", transferData);
+    console.log("Transfer Funds Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error transferring funds:", error);
+    return error.response?.data || "Transfer failed";
+  }
+};
+
+export const getTransactionHistory = async () => {
+  try {
+    const response = await api.get("/transactions/get");
+    console.log("Transaction History Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching transaction history:", error);
+    return error.message || "Failed to fetch transaction history";
+  }
+};
