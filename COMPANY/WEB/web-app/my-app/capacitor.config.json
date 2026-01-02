@@ -1,0 +1,10 @@
+{
+  "appId": "com.cleanwavenigltd.app",
+  "appName": "Cleanwave Recycling",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cleanwave Recycling</string>
+    <string name="title_activity_main">Cleanwave Recycling</string>
+    <string name="package_name">com.cleanwavenigltd.app</string>
+    <string name="custom_url_scheme">com.cleanwavenigltd.app</string>
+</resources>
