@@ -1,4 +1,5 @@
 const knex = require("../db/knex");
+const { createTransaction } = require("../models/transactions.model");
 
 exports.updateBalance = async (id, amount, trx) => {
   try {
@@ -11,6 +12,12 @@ exports.updateBalance = async (id, amount, trx) => {
         .where({ user_id: id })
         .increment("balance", amount) // Adds 'amount' to the current balance
         .update({ updated_at: knex.fn.now() }); // You can still update other fields
+
+      await createTransaction({
+        userId: id,
+        amount,
+        transactionType: "credit",
+      });
 
       return { success: true };
     }
@@ -37,6 +44,11 @@ exports.deductBalance = async (id, amount, trx) => {
         .decrement("balance", amount) // Subtracts 'amount' from the current balance
         .update({ updated_at: knex.fn.now() }); // You can still update other fields
 
+      await createTransaction({
+        userId: id,
+        amount,
+        transactionType: "debit",
+      });
       return { success: true };
     }
   } catch (err) {
@@ -44,4 +56,3 @@ exports.deductBalance = async (id, amount, trx) => {
     return { success: false };
   }
 };
-

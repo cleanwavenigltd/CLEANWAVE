@@ -25,7 +25,8 @@ const {
   getProfile,
   authenticate,
   logout,
-  checkLogin
+  checkLogin,
+  resetPassword
 } = require("../controllers/authControllers");
 
 const { verifyEmail } = require("../controllers/verificationController");
@@ -36,5 +37,6 @@ router.post("/login", loginUser);
 router.get("/profile", authenticate, getProfile);
 router.post("/logout", logout);
 router.get("/check-login", checkLogin);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;

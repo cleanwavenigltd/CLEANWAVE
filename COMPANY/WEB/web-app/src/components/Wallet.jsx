@@ -15,8 +15,8 @@ import {
   getTransactionHistory,
   checkAccountNumber,
   transferFunds,
-} from "../../../services/authservice";
-import { NIGERIAN_BANKS } from "../../../data/banks";
+} from "../services/authservice";
+import { NIGERIAN_BANKS } from "../data/banks";
 
 const Wallet = () => {
   const [balance, setBalance] = useState(0);
@@ -172,11 +172,13 @@ const Wallet = () => {
 
   const verifyAccountNumber = async (e) => {
     e.preventDefault();
+    setLoading(true)
     setError(null);
     setSuccess(null);
     try {
       const res = await checkAccountNumber(withdrawalForm);
       if (res.success) {
+        setLoading(false)
         // setSuccess("Account verified successfully");
         setWithdrawalForm((prev) => ({
           ...prev,
@@ -190,6 +192,8 @@ const Wallet = () => {
     } catch (err) {
       setError("Network error during account verification");
       setVerified(false);
+    }finally{
+      setLoading(false)
     }
   };
 

@@ -6,13 +6,13 @@ const {
   addTransaction,
   getTransactions,
   verifyAccount,
-  transferFunds
+  transfer,
 } = require("../controllers/transactionsControllers");
 router.post("/add", addTransaction);
 
 router.post("/add", authenticate, addTransaction);
 router.get("/get", authenticate, getTransactions);
 router.post("/verify-account", authenticate, verifyAccount);
-router.post("/transfer"),authenticate, transferFunds;
+router.post("/transfer", authenticate, transfer);
 
 module.exports = router;

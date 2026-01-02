@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Home, Wallet, User, Users, Truck } from "lucide-react";
 import HomePage from "../pages/agent/components/Home";
 import Pickups from "../pages/agent/components/Pickups";
-import WalletPage from "../pages/agent/components/Wallet";
+import WalletPage from "../components/Wallet";
 import Profile from "../pages/agent/components/Profile";
 import { PageProvider } from "../contexts/PageContext";
 import { useUser } from "../contexts/UserContext";

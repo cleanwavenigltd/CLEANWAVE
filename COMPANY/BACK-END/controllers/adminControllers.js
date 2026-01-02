@@ -35,10 +35,12 @@ const adminLogin = async (req, res) => {
       sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-    return res
-      .status(200)
-      .json({ success: true, token: token,
-      role: admin.role, redirect: "/dashboard" });
+    return res.status(200).json({
+      success: true,
+      token: token,
+      role: admin.role,
+      redirect: "/dashboard",
+    });
   } catch (err) {
     console.log("AdminLogin:: ERROR", err);
     return res.status(500).json({ error: "Server Error" });
@@ -191,6 +193,18 @@ const updateProfile = async (req, res) => {
     return res.status(500).json({ error: "Server Error" });
   }
 };
+
+const getWasteData = async (req, res) => {
+  try {
+    const data = await knex("Waste_pickups").select("*");
+    if (!data) {
+      return res.status(201).json({ message: "No pickups Found" });
+    }
+    return res.status(200).json({ data });
+  } catch (err) {
+    return res.status(500).json({ error: "Server Error" });
+  }
+};
 module.exports = {
   totalUsers,
   getAllInfo,
@@ -198,4 +212,5 @@ module.exports = {
   updateProfile,
   adminLogout,
   adminCheckLogin,
+  getWasteData,
 };

@@ -1,20 +1,12 @@
 const knex = require("../db/knex");
 
-const addTransactionModel = async ({
-  userId,
-  amount,
-  transactionType,
-  date,         
-    description,
-}) => {
+const addTransactionModel = async ({ userId, amount, transactionType }) => {
   try {
     const transaction = await knex("transactions")
       .insert({
         user_id: userId,
         amount,
         type: transactionType,
-        date,
-        description,
         created_at: knex.fn.now(),
         updated_at: knex.fn.now(),
       })

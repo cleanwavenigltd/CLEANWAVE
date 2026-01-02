@@ -3,7 +3,7 @@ import { Home, Wallet, User, Truck } from "lucide-react";
 import Header from "./Header";
 import HomePage from "../pages/waste/components/Home";
 import Pickups from "../pages/waste/components/Pickups";
-import WalletPage from "../pages/waste/components/Wallet";
+import WalletPage from "../components/Wallet";
 import Profile from "../pages/waste/components/Profile";
 import { PageProvider } from "../contexts/PageContext";
 import { useUser } from "../contexts/UserContext";
@@ -28,41 +28,24 @@ export default function WasteLayout() {
           <div className="flex-1 w-full px-2 sm:px-6 max-w-3xl mx-auto items-start">
             <HomePage />
           </div>
-          //   <div className="p-6">
-          //     <h1 className="text-xl font-semibold mb-4">Welcome to Cleanwave</h1>
-          //     <p className="text-gray-600 text-sm">Track your recycling activity and earnings.</p>
-          //   </div>
         );
       case "pickups":
         return (
           <div className="flex-1 w-full px-2 sm:px-6 max-w-3xl mx-auto items-start">
             <Pickups />
           </div>
-          //   <div className="p-6">
-          //     <h1 className="text-xl font-semibold mb-4">Your Pickups</h1>
-          //     <p className="text-gray-600 text-sm">Request and monitor waste pickups.</p>
-          //   </div>
         );
       case "wallet":
         return (
           <div className="flex-1 w-full px-2 sm:px-6 max-w-3xl mx-auto items-start">
             <WalletPage />
           </div>
-          //   <div className="p-6">
-          //     <h1 className="text-xl font-semibold mb-4">Wallet</h1>
-          //     <p className="text-gray-600 text-sm">View your earnings and withdraw funds.</p>
-          //   </div>
         );
       case "profile":
         return (
           <div className="flex-1 w-full px-2 sm:px-6 max-w-3xl mx-auto items-start">
             <Profile />
           </div>
-
-          // <div className="p-6">
-          //   <h1 className="text-xl font-semibold mb-4">Profile</h1>
-          //   <p className="text-gray-600 text-sm">Manage your personal information.</p>
-          // </div>
         );
     }
   };
@@ -70,7 +53,7 @@ export default function WasteLayout() {
   return (
     <PageProvider value={{ activeTab, setActiveTab }}>
       <div className="min-h-screen bg-gray-100 flex flex-col">
-        <Header userName={user?.name || "user"} role={role || "guest"} />
+        <Header />
         <div className="flex-1">{renderScreen()}</div>
 
         <nav className="h-[10%]  border-t-4 border-gray-200 fixed bottom-0 left-0 right-0 z-50 bg-white flex justify-around">

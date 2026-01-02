@@ -3,8 +3,8 @@ import { PageContext } from "../contexts/PageContext";
 import { useState, useContext } from "react";
 
 export default function Header({
-  userName = "John Doe",
-  role = "user",
+  // userName = "John Doe",
+  // role = "user"
   //   userAvatar = "https://via.placeholder.com/40",
 }) {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -66,10 +66,10 @@ export default function Header({
                 <User className="w-7 h-7 rounded-full border-2 border-gray-200" />
               </button>
               {/* <img src={userAvatar} alt={userName} className="w-10 h-10 rounded-full border-2 border-gray-200" /> */}
-              <div className="">
+              {/* <div className="">
                 <p className="text-xs font-medium text-gray-900">{userName}</p>
                 <p className="text-xs text-gray00">{role}</p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -8,6 +8,7 @@ const {
   updateProfile,
   adminLogout,
   adminCheckLogin,
+  getWasteData,
 } = require("../controllers/adminControllers");
 
 router.post("/login", adminLogin);
@@ -16,4 +17,5 @@ router.get("/check-login", adminCheckLogin);
 router.get("/all-info", isAdmin, getAllInfo);
 router.get("/total-users", isAdmin, totalUsers);
 router.put("/update-profile", isAdmin, updateProfile);
+router.get("/waste-data", isAdmin, getWasteData);
 module.exports = router;

@@ -82,9 +82,10 @@ export const walletBalance = async () => {
 
 export const checkAccountNumber = async (accountNumber) => {
   try {
-    const response = await api.post("/transactions/verify-account", {
-      accountNumber,
-    });
+    const response = await api.post(
+      "/transactions/verify-account",
+      accountNumber
+    );
     console.log("Check Account Number Response:", response.data);
     return response.data;
   } catch (error) {

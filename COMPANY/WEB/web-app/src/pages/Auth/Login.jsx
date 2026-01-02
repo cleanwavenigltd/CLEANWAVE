@@ -225,7 +225,8 @@ export default function Login({ onSwitch }) {
         };
         navigate(routes[role] || "/");
       } else {
-        setError(response?.message || "Invalid email or password.");
+        console.log(response)
+        setError(response || "Invalid email or password.");
       }
     } catch (err) {
       setError("Connection error. Please check your internet.");
@@ -264,7 +265,7 @@ export default function Login({ onSwitch }) {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="relative">
-              <Mail className="absolute left-4 top-[18px] text-gray-400 w-5 h-5 z-10 pointer-events-none" />
+              <Mail className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
               <Input
                 label="Email Address"
                 type="email"

@@ -2,10 +2,10 @@ const {
   createTransaction,
   fetchTransactions,
 } = require("../models/transactions.model");
-const { deductBalance } = require("../models/users.model");
+const { deductBalance } = require("../services/updateBalance");
 const knex = require("../db/knex");
 const axios = require("axios");
-const addTransaction = async (req, res) => {
+exports.addTransaction = async (req, res) => {
   try {
     const { userId } = req.user;
     const { amount, type, description } = req.body;
@@ -28,7 +28,7 @@ const addTransaction = async (req, res) => {
   }
 };
 
-const getTransactions = async (req, res) => {
+exports.getTransactions = async (req, res) => {
   try {
     const { userId } = req.user;
     const transactions = await fetchTransactions(userId);
@@ -42,18 +42,21 @@ const getTransactions = async (req, res) => {
   }
 };
 
-const verifyAccount = async (req, res) => {
+exports.verifyAccount = async (req, res) => {
   try {
     const { accountNumber, bankCode } = req.body;
+    console.log("Verifying account:", accountNumber, bankCode);
 
     const response = await axios.get(
       `https://api.paystack.co/bank/resolve?account_number=${accountNumber}&bank_code=${bankCode}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          "Content-Type": "application/json",
         },
       }
     );
+    console.log("REsponse :", response);
 
     if (response.data.status) {
       return res.status(200).json({
@@ -61,15 +64,18 @@ const verifyAccount = async (req, res) => {
         accountName: response.data.data.account_name,
       });
     } else {
-      return res
-        .status(400)
-        .json({ error: "Account verification failed" });
+      return res.status(400).json({ error: "Account verification failed" });
     }
   } catch (err) {
-    console.error("Paystack Verification Error:", err.response?.data || err.message);
-    return res.status(500).json({ error: "Verification service currently unavailable" });
+    console.error(
+      "Paystack Verification Error:",
+      err || err.response?.data || err.message
+    );
+    return res
+      .status(500)
+      .json({ error: "Verification service currently unavailable" });
   }
-}
+};
 
 exports.transfer = async (req, res) => {
   try {
@@ -111,14 +117,15 @@ exports.transfer = async (req, res) => {
 
     // 3. Step Two: Initiate Transfer
     const transferResponse = await axios.post(
-      "api.paystack.co",
+      "https://api.paystack.co/transfer",
       {
         source: "balance",
         amount: amount * 100, // Convert to Kobo
         recipient: recipientCode,
         reason: "Waste Pickup Payout",
       },
-      {        headers: {
+      {
+        headers: {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
@@ -127,13 +134,17 @@ exports.transfer = async (req, res) => {
 
     if (transferResponse.data.status) {
       // 4. Deduct Balance & Record Transaction
-      await deductBalance({ id: userId, amount });
-      await addTransaction({
-        userId,
+      await deductBalance({
+        id: userId,
         amount,
-        type: "debit",
         reference: transferResponse.data.data.reference,
       });
+      // await addTransaction({
+      //   userId,
+      //   amount,
+      //   type: "debit",
+      //   reference: transferResponse.data.data.reference,
+      // });
 
       return res.status(200).json({
         success: true,
@@ -153,4 +164,4 @@ exports.transfer = async (req, res) => {
   }
 };
 
-module.exports = { addTransaction, getTransactions, transferFunds: transfer };
+// module.exportsexports.getTransactions, };

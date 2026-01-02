@@ -81,7 +81,7 @@ const createWastePickup = async ({ userId, category, kg, note }) => {
         waste_type: category,
         kg,
         info: note,
-        state,
+        location: state + "" + wasteBank.lga,
         status: "pending",
       })
       .returning("*");

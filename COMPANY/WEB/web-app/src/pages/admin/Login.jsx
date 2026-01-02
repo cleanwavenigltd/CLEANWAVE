@@ -89,7 +89,7 @@ export default function Login() {
             <label className="block text-sm font-medium text-gray-700">
               Email
               <div className="relative w-full mb-6">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Mail className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
                 <Input
                   type="email"
                   placeholder="you@company.com"
@@ -107,7 +107,7 @@ export default function Login() {
               Password
               <div className="relative mt-1">
                 <div>
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
                   <Input
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"

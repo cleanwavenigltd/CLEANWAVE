@@ -71,7 +71,7 @@ export default function ForgotPassword({ onSwitch }) {
           <div className="relative group">
             {/* Positioned precisely; z-10 ensures it stays above the input background */}
             <Mail
-              className={`absolute left-3 top-[10px] w-5 h-5 z-10 transition-colors 
+              className={`absolute left-3 top-5 w-5 h-5 z-10 transition-colors 
               ${
                 email
                   ? "text-[#8CA566]"

@@ -155,7 +155,7 @@ function Header({ setSidebarOpen, sidebarOpen }) {
     <header className="bg-gray-950 border-b border-gray-700 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="p-2 hover:bg-gray-800 rounded-lg transition-all"
+        className="p-2 hover:bg-gray-800 rounded-lg transition-allca"
         aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
       >
         {sidebarOpen ? <X size={20} /> : <Menu size={20} />}

@@ -15,6 +15,7 @@ export default function SearchableWasteAdmin() {
     const fetchData = async () => {
       try {
         const response = await getAllWasteData();
+        console.log("Response of Waste Pickips::", response);
         setWasteData(response.data || []);
       } finally {
         setLoading(false);
@@ -40,8 +41,8 @@ export default function SearchableWasteAdmin() {
   const filteredData = wasteData.filter((item) => {
     const matchesTab = activeTab === "all" ? true : item.status === activeTab;
     const matchesSearch =
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      item.waste_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.info.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
 
@@ -77,7 +78,7 @@ export default function SearchableWasteAdmin() {
               placeholder="Search pickups, names, or details..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-2xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
+              className="text-black block w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-2xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
             />
             {searchQuery && (
               <button
@@ -126,9 +127,9 @@ export default function SearchableWasteAdmin() {
                   {item.status}
                 </span>
               </div>
-              <h2 className="text-xl font-bold text-slate-800">{item.name}</h2>
+              <h2 className="text-xl font-bold text-slate-800">{item.waste_type}   {item.kg}kg</h2>
               <p className="text-slate-500 text-sm mt-2 mb-6 leading-relaxed">
-                {item.description}
+                {item.info}
               </p>
 
               <div className="flex gap-3">
