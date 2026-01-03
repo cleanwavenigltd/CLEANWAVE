@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
-    "@capacitor/cli": "^8.0.0",
     "@capacitor/core": "^8.0.0",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.2",
@@ -30,6 +29,7 @@
     "recharts": "^3.4.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
     "@eslint/js": "^9.9.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
