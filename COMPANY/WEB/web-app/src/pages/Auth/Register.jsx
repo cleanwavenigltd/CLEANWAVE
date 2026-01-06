@@ -99,10 +99,10 @@
 //           </div>
 //         )}
 //         {success && (
-          // <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex gap-2">
-          //   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-          //   <p className="text-sm text-green-700">{success}</p>
-          // </div>
+// <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-3 flex gap-2">
+//   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+//   <p className="text-sm text-green-700">{success}</p>
+// </div>
 //         )}
 
 //         <form onSubmit={handleSubmit}>
@@ -516,7 +516,11 @@ export default function Register({ onSwitch }) {
     lga: "",
   });
 
-  const [uiState, setUiState] = useState({ loading: false, error: "", success: "" });
+  const [uiState, setUiState] = useState({
+    loading: false,
+    error: "",
+    success: "",
+  });
 
   // Memoize states to prevent unnecessary re-renders
   const states = useMemo(() => Object.keys(nigeriaLocations).sort(), []);
@@ -532,12 +536,15 @@ export default function Register({ onSwitch }) {
 
   const validateForm = () => {
     if (!form.name.trim()) return "Full name is required.";
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) return "Enter a valid email address.";
-    if (!/^\d{10,15}$/.test(form.phone.replace(/\D/g, ""))) return "Enter a valid Nigerian phone number.";
+    if (!/^\S+@\S+\.\S+$/.test(form.email))
+      return "Enter a valid email address.";
+    if (!/^\d{10,15}$/.test(form.phone.replace(/\D/g, "")))
+      return "Enter a valid Nigerian phone number.";
     if (!form.state) return "Please select a state.";
     if (!form.lga) return "Please select a Local Government Area.";
     if (!form.gender) return "Please select your gender.";
-    if (form.password.length < 8) return "Password must be at least 8 characters.";
+    if (form.password.length < 8)
+      return "Password must be at least 8 characters.";
     if (form.password !== form.confirm) return "Passwords do not match.";
     return null;
   };
@@ -551,29 +558,48 @@ export default function Register({ onSwitch }) {
     try {
       const res = await register(form);
       if (res.success) {
-        setUiState({ loading: false, error: "", success: "Account created! Redirecting to login..." });
+        setUiState({
+          loading: false,
+          error: "",
+          success: "Account created! Redirecting to login...",
+        });
         setTimeout(() => navigate("/"), 2000);
       } else {
-        setUiState({ loading: false, error: res.error || "Registration failed.", success: "" });
+        setUiState({
+          loading: false,
+          error: res.error || "Registration failed.",
+          success: "",
+        });
       }
     } catch (err) {
-      setUiState({ loading: false, error: "Service unavailable. Please try again later.", success: "" });
+      setUiState({
+        loading: false,
+        error: "Service unavailable. Please try again later.",
+        success: "",
+      });
     }
   };
 
-  const selectClass = "h-12 w-full border border-gray-300 rounded-lg pl-10 pr-3 text-gray-700 focus:ring-2 focus:ring-[#8CA566] focus:border-transparent outline-none text-sm transition-all appearance-none bg-white";
+  const selectClass =
+    "h-12 w-full border border-gray-300 rounded-lg pl-10 pr-3 text-gray-700 focus:ring-2 focus:ring-[#8CA566] focus:border-transparent outline-none text-sm transition-all appearance-none bg-white";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-2">
       <div className="bg-white rounded-2xl w-full max-w-2xl shadow-xl border border-gray-100 overflow-hidden">
         {/* Header Section */}
         <div className="bg-white p-6 text-center border-b border-gray-50">
-          <img src={fav} alt="Cleanwave Logo" className="w-16 h-20 mx-auto mb-4 object-contain" />
+          <img
+            src={fav}
+            alt="Cleanwave Logo"
+            className="w-16 h-20 mx-auto mb-4 object-contain"
+          />
           <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>
-          <p className="text-gray-500 text-sm mt-1">Join Cleanwave Recycling Nigeria Limited</p>
+          <p className="text-gray-500 text-sm mt-1">
+            Join Cleanwave Recycling Nigeria Limited
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8">
+        <form onSubmit={handleSubmit} className="p-4">
           {/* Status Alerts */}
           {uiState.error && (
             <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 flex items-center gap-3 animate-shake">
@@ -593,24 +619,49 @@ export default function Register({ onSwitch }) {
             <div className="space-y-4">
               <div className="relative">
                 <User className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
-                <Input label="Full Name" name="name" placeholder="John Doe" value={form.name} onChange={handleChange} />
+                <Input
+                  label="Full Name"
+                  name="name"
+                  placeholder="John Doe"
+                  value={form.name}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="relative">
                 <Mail className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
-                <Input label="Email Address" type="email" name="email" placeholder="john@example.com" value={form.email} onChange={handleChange} />
+                <Input
+                  label="Email Address"
+                  type="email"
+                  name="email"
+                  placeholder="john@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="relative">
                 <Phone className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
-                <Input label="Phone Number" type="tel" name="phone" placeholder="08012345678" value={form.phone} onChange={handleChange} />
+                <Input
+                  label="Phone Number"
+                  type="tel"
+                  name="phone"
+                  placeholder="08012345678"
+                  value={form.phone}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="relative">
                 <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider"></label>
                 <div className="relative">
                   <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <select name="gender" value={form.gender} onChange={handleChange} className={selectClass}>
+                  <select
+                    name="gender"
+                    value={form.gender}
+                    onChange={handleChange}
+                    className={selectClass}
+                  >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -625,9 +676,18 @@ export default function Register({ onSwitch }) {
                 <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider"></label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <select name="state" value={form.state} onChange={handleChange} className={selectClass}>
+                  <select
+                    name="state"
+                    value={form.state}
+                    onChange={handleChange}
+                    className={selectClass}
+                  >
                     <option value="">Select State</option>
-                    {states.map(s => <option key={s} value={s}>{s}</option>)}
+                    {states.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -636,21 +696,44 @@ export default function Register({ onSwitch }) {
                 <label className="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wider"></label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <select name="lga" value={form.lga} onChange={handleChange} disabled={!form.state} className={`${selectClass} disabled:bg-gray-50 disabled:cursor-not-allowed`}>
+                  <select
+                    name="lga"
+                    value={form.lga}
+                    onChange={handleChange}
+                    disabled={!form.state}
+                    className={`${selectClass} disabled:bg-gray-50 disabled:cursor-not-allowed`}
+                  >
                     <option value="">Select LGA</option>
-                    {form.state && nigeriaLocations[form.state].map(l => <option key={l} value={l}>{l}</option>)}
+                    {form.state &&
+                      nigeriaLocations[form.state].map((l) => (
+                        <option key={l} value={l}>
+                          {l}
+                        </option>
+                      ))}
                   </select>
                 </div>
               </div>
 
               <div className="relative">
                 <Lock className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
-                <Input label="Password" type="password" name="password" value={form.password} onChange={handleChange} />
+                <Input
+                  label="Password"
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="relative">
                 <Lock className="absolute left-3 top-5 text-gray-400 w-5 h-5" />
-                <Input label="Confirm Password" type="password" name="confirm" value={form.confirm} onChange={handleChange} />
+                <Input
+                  label="Confirm Password"
+                  type="password"
+                  name="confirm"
+                  value={form.confirm}
+                  onChange={handleChange}
+                />
               </div>
             </div>
           </div>
@@ -660,12 +743,20 @@ export default function Register({ onSwitch }) {
             disabled={uiState.loading}
             className="w-full mt-8 bg-[#8CA566] hover:bg-[#7a9155] text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-[#8ca5664d] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {uiState.loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
+            {uiState.loading ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              "Create Account"
+            )}
           </button>
 
           <p className="text-center text-gray-600 mt-6 text-sm">
             Already have an account?{" "}
-            <button type="button" onClick={() =>onSwitch("login")} className="text-[#8CA566] font-bold hover:underline">
+            <button
+              type="button"
+              onClick={() => onSwitch("login")}
+              className="text-[#8CA566] font-bold hover:underline"
+            >
               Sign In
             </button>
           </p>

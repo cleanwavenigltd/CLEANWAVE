@@ -225,7 +225,7 @@ export default function Login({ onSwitch }) {
         };
         navigate(routes[role] || "/");
       } else {
-        console.log(response)
+        console.log(response);
         setError(response || "Invalid email or password.");
       }
     } catch (err) {
@@ -236,11 +236,10 @@ export default function Login({ onSwitch }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F9FAFB] px-4">
-      <div className="w-full max-w-[440px]">
+    <div className="min-h-screen flex items-center justify-center bg-[#F9FAFB] px-2">
+      <div className="w-full max-w-2xl">
         {/* Card Container */}
-        <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 sm:p-10">
-          
+        <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-4 sm:p-10">
           {/* Header Section */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center mb-4 transition-transform hover:scale-105 duration-300">

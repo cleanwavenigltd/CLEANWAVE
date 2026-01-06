@@ -12,9 +12,9 @@ import { Lock, Mail } from "lucide-react";
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("mmdmuazu@gmail.com");
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("1234");
   // const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function Login() {
         console.log("Admin Login success: ", role);
 
         // Save to Redux and sessionStorage
-        dispatch(setAuth({ token, role }));
+        // dispatch(setAuth({ token, role }));
 
         // Start token timer
         startTokenTimer(token);

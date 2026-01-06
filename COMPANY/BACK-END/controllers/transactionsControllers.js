@@ -56,7 +56,7 @@ exports.verifyAccount = async (req, res) => {
         },
       }
     );
-    console.log("REsponse :", response);
+    // console.log("REsponse :", response);
 
     if (response.data.status) {
       return res.status(200).json({
@@ -80,12 +80,12 @@ exports.verifyAccount = async (req, res) => {
 exports.transfer = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { amount } = req.body;
+    const { accountNumber , bankCode, accountName, amount } = req.body;
 
     // Use your specific test data for debugging:
-    const accountNumber = "0001234567";
-    const bankCode = "058"; // GTB bank code
-    const accountName = "TEST ACCOUNT 1234567890";
+    // const accountNumber = "0001234567";
+    // const bankCode = "058"; // GTB bank code
+    // const accountName = "TEST ACCOUNT 1234567890";
 
     // 1. Fetch User & Check Balance
     const user = await knex("Users").where({ id: userId }).first();
@@ -97,7 +97,7 @@ exports.transfer = async (req, res) => {
 
     // 2. Step One: Create Transfer Recipient
     const recipientResponse = await axios.post(
-      "https://api.paystack.co/recipients",
+      "https://api.paystack.co/transferrecipient",
       {
         type: "nuban",
         name: accountName,
@@ -154,6 +154,7 @@ exports.transfer = async (req, res) => {
     }
   } catch (err) {
     // Log the specific Axios error for debugging
+    console.log("This is transfer Error:: ",err)
     console.error(
       "Paystack Transfer Error Detail:",
       err.response?.data || err.message

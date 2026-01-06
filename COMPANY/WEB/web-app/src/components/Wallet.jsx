@@ -5,6 +5,7 @@ import {
   PhoneIcon,
   AlertCircle,
   ArrowDownCircle,
+  ChevronDown,
   ArrowLeft,
   Loader,
   CheckCircle,
@@ -21,32 +22,10 @@ import { NIGERIAN_BANKS } from "../data/banks";
 const Wallet = () => {
   const [balance, setBalance] = useState(0);
   const [activeTab, setActiveTab] = useState("purchase");
-  const [transactions, setTransactions] = useState([
-    // {
-    //   id: 1,
-    //   type: "Deposit",
-    //   amount: 10000,
-    //   date: "2025-11-03",
-    //   status: "completed",
-    // },
-    // {
-    //   id: 2,
-    //   type: "Airtime Purchase",
-    //   amount: -1000,
-    //   date: "2025-11-04",
-    //   status: "completed",
-    // },
-    // {
-    //   id: 3,
-    //   type: "Data Bundle",
-    //   amount: -500,
-    //   date: "2025-11-05",
-    //   status: "completed",
-    // },
-  ]);
+  const [transactions, setTransactions] = useState([]);
   const [withdrawalForm, setWithdrawalForm] = useState({
-    bankCode: "001",
-    accountNumber: "9038448811",
+    bankCode: "",
+    accountNumber: "",
     accountName: "", // Usually fetched via API
     amount: "",
     pin: "",
@@ -55,6 +34,8 @@ const Wallet = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [verified, setVerified] = useState(false);
+  const [bankSearch, setbankSearch] = useState("");
+  const [showbankDropdown, setShowbankDropdown] = useState(false);
 
   useEffect(() => {
     fetchWalletData();
@@ -172,13 +153,13 @@ const Wallet = () => {
 
   const verifyAccountNumber = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     setError(null);
     setSuccess(null);
     try {
       const res = await checkAccountNumber(withdrawalForm);
       if (res.success) {
-        setLoading(false)
+        setLoading(false);
         // setSuccess("Account verified successfully");
         setWithdrawalForm((prev) => ({
           ...prev,
@@ -192,8 +173,8 @@ const Wallet = () => {
     } catch (err) {
       setError("Network error during account verification");
       setVerified(false);
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -243,7 +224,22 @@ const Wallet = () => {
       setLoading(false);
     }
   };
+  const handlebankSelect = (bank) => {
+    setWithdrawalForm((prev) => ({
+      ...prev,
+      bankCode: bank.code,
+    }));
+    setbankSearch("");
+    setShowbankDropdown(false);
+  };
 
+  const filteredbanks = NIGERIAN_BANKS.filter((bank) =>
+    (bank.name || "").toLowerCase().includes(bankSearch.toLowerCase())
+  );
+
+  const selectedbank = NIGERIAN_BANKS.find(
+    (bank) => (bank.code || bank.id) === form.bankCode
+  );
   return (
     <div className="mt-1 min-h-screen flex flex-col relative pb-24 bg-gray-50">
       {/* Header */}
@@ -466,7 +462,7 @@ const Wallet = () => {
             )}
             {!verified && (
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase">
+                {/* <label className="text-xs font-bold text-gray-500 uppercase">
                   Select Bank
                 </label>
                 <select
@@ -480,19 +476,81 @@ const Wallet = () => {
                   }
                 >
                   <option value="">Choose Bank...</option>
-                  {/* Dynamically Map through the imported list */}
+                  // Dynamically Map through the imported list 
                   {NIGERIAN_BANKS.map((bank) => (
                     <option key={bank.code} value={bank.code}>
                       {bank.name}
                     </option>
                   ))}
-                </select>
-                {formErrors.bankCode && (
-                  <p className="text-red-500 text-[10px] mt-1">
-                    {formErrors.bankCode}
-                  </p>
-                )}
+                </select> */}
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Bank
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowbankDropdown(!showbankDropdown)}
+                    className="w-full h-12 border-2 border-gray-200 rounded-lg px-4 text-sm focus:outline-none focus:border-[#8CA566] transition flex items-center justify-between bg-white"
+                  >
+                    <span
+                      className={
+                        selectedbank ? "text-gray-900" : "text-gray-500"
+                      }
+                    >
+                      {selectedbank
+                        ? selectedbank.name || selectedbank.id
+                        : "Select a bank"}
+                    </span>
+                    {/* <ChevronDown
+                      size={18}
+                      className={`transition ${
+                        showbankDropdown ? "rotate-180" : ""
+                      }`} */}
+                    {/* /> */}
+                  </button>
+
+                  {showbankDropdown && (
+                    <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-lg">
+                      <div className="p-2 border-b border-gray-200">
+                        <input
+                          type="text"
+                          placeholder="Search banks..."
+                          value={bankSearch}
+                          onChange={(e) => setbankSearch(e.target.value)}
+                          className="w-full h-10 px-3 border border-gray-300 rounded-lg text-sm outline-none"
+                        />
+                      </div>
+                      <div className="max-h-48 overflow-y-auto">
+                        {filteredbanks.length > 0 ? (
+                          filteredbanks.map((bank) => (
+                            <button
+                              key={bank.code}
+                              type="button"
+                              onClick={() => handlebankSelect(bank)}
+                              className="w-full text-left px-4 py-3 hover:bg-[#f5f9f3] border-b border-gray-100 last:border-b-0 flex items-center justify-between"
+                            >
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">
+                                  {bank.name || bank.id}
+                                </p>
+                              </div>
+                            </button>
+                          ))
+                        ) : (
+                          <p className="p-4 text-sm text-gray-500">
+                            No Bank Found
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
+              // {formErrors.bankCode && (
+              //   <p className="text-red-500 text-[10px] mt-1">
+              //     {formErrors.bankCode}
+              //   </p>
+              // )}
             )}
             {!verified && (
               <div>

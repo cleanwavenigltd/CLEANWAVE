@@ -37,7 +37,7 @@ exports.isAdmin = (req, res, next) => {
   // const header = req.headers.authorization;
 
   const authHeader = req.headers["authorization"];
-  console.log("Authenticate Middleware:: Auth Header:: ", authHeader);
+  console.log("Admin Authenticate Middleware:: Auth Header:: ", authHeader);
 
   // Extract the token part from "Bearer <token>"
   const token = authHeader && authHeader.split(" ")[1];

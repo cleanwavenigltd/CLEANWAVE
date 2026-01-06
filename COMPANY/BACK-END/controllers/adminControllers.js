@@ -6,10 +6,7 @@ const jwt = require("jsonwebtoken");
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(
-      "AdminLogin:: This is request Body :",
-      typeof req.body.password
-    );
+    console.log("AdminLogin:: This is request Body :", req.body);
     if (!email || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
@@ -21,7 +18,7 @@ const adminLogin = async (req, res) => {
     if (admin.password !== password) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    console.log("authControolers:: Password: ", password, admin);
+    console.log("adminControolers:: Password: ", password, admin);
     // if (!valid) return res.status(401).json({ error: "Invalid credentials" });
     const token = jwt.sign(
       { adminId: admin.id, role: "admin" },
@@ -79,7 +76,7 @@ const adminLogout = (req, res) => {
   });
 
   return res.json({
-    success: true,
+    success: false,
     message: "Logged out successfully", // Generic message
   });
 };
