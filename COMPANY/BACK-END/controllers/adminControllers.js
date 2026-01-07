@@ -2,6 +2,7 @@ const knex = require("../db/knex");
 const { getAllUsers } = require("../models/admin.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { updateBalance } = require("../services/updateBalance");
 
 const adminLogin = async (req, res) => {
   try {
@@ -202,6 +203,108 @@ const getWasteData = async (req, res) => {
     return res.status(500).json({ error: "Server Error" });
   }
 };
+const updateWasteStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!id || !status) {
+    return res.status(400).json({ error: "All Fields Are required!" });
+  }
+
+  try {
+    // 1. Use a transaction for financial integrity
+    await knex.transaction(async (trx) => {
+      // 2. Fetch the current state first to prevent double-payout
+      const existingPickup = await trx("Waste_pickups").where({ id }).first();
+
+      if (!existingPickup) {
+        throw new Error("NOT_FOUND");
+      }
+
+      // 3. Only process payout if the status is CHANGING to 'delivered'
+      if (status === "delivered" && existingPickup.status !== "delivered") {
+        const category = await trx("Categories")
+          .where({ name: existingPickup.category })
+          .first();
+
+        if (!category) throw new Error("CATEGORY_NOT_FOUND");
+
+        let pricePerKg = parseFloat(category.prize_per_kg) || 0;
+        console.log("category price :", pricePerKg, category.prize_per_kg);
+
+        if (existingPickup.subcategory) {
+          const sub = await trx("Sub_Categories")
+            .where({ name: existingPickup.subcategory })
+            .first();
+          pricePerKg = parseFloat(sub.prize_per_kg) || 0;
+        }
+
+        // 4. Calculate payout (Rounding to avoid floating point issues)
+        const kg = parseFloat(existingPickup.kg) || 0;
+        const payout = Math.round(pricePerKg * kg);
+        console.log("Payout calculated :", payout);
+
+        // 5. Update user balance within the same transaction
+        await updateBalance(existingPickup.user_id, payout, trx);
+      }
+
+      // 6. Update the pickup status
+      await trx("Users")
+        .where({ id: existingPickup.user_id })
+        .update({ capacity: 0 });
+      await trx("Waste_pickups").where({ id }).update({ status });
+    });
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    if (err.message === "NOT_FOUND") {
+      return res.status(404).json({ error: "No Pickups Found" });
+    }
+    console.error("Transaction Error:", err);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// const updateWasteStatus = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { status } = req.body;
+
+//     if (!id || !status) {
+//       return res.status(400).json({ error: "All Fields Are required!" });
+//     }
+
+//     const pickup = await knex("Waste_pickups")
+//       .where({ id })
+//       .update({ status })
+//       .returning("*");
+//     console.log("Pick8 :", pickup[0]);
+//     if (!pickup) {
+//       return res.status(404).json({ error: "No Pickups Found" });
+//     }
+//     if (status == "delivered" && pickup[0].status == "delivered") {
+//       let pricePerKg = 0;
+//       if (pickup[0].subcategory) {
+//         const subcategory = pickup[0].subcategory;
+//         const sub = await knex("Sub_Categories")
+//           .where({ name: subcategory })
+//           .first();
+//         pricePerKg = parseFloat(sub.price_per_kg);
+//         console.log("sub,", sub);
+//       }
+//       const payout = Math.round(pricePerKg * parseFloat(pickup[0].kg));
+//       console.log(pricePerKg);
+//       await updateBalance(pickup[0].user_id, payout);
+
+//       return res.status(200).json({ success: true });
+//     } else {
+//       return res.status(400).json({ error: "Pickup not founds" });
+//     }
+//   } catch (err) {
+//     console.log("Error :", err);
+//     return res.status(403).json({ error: "Unuthorized" });
+//   }
+// };
 module.exports = {
   totalUsers,
   getAllInfo,
@@ -210,4 +313,5 @@ module.exports = {
   adminLogout,
   adminCheckLogin,
   getWasteData,
+  updateWasteStatus,
 };

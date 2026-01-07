@@ -92,4 +92,6 @@ export const NIGERIAN_BANKS = [
   { code: "566", name: "VFD Microfinance Bank Limited" },
   { code: "035", name: "Wema Bank" },
   { code: "057", name: "Zenith Bank" },
+  //Its optional for paystack, because they dont accept 090405  for now i dont kow for later
+  { code: "50515" || "090405", name: "Moniepoint Microfinance Bank (MFB)" },
 ];

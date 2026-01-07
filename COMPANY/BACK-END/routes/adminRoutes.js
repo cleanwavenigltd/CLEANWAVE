@@ -9,6 +9,7 @@ const {
   adminLogout,
   adminCheckLogin,
   getWasteData,
+  updateWasteStatus
 } = require("../controllers/adminControllers");
 
 router.post("/login", adminLogin);
@@ -18,4 +19,5 @@ router.get("/all-info", isAdmin, getAllInfo);
 router.get("/total-users", isAdmin, totalUsers);
 router.put("/update-profile", isAdmin, updateProfile);
 router.get("/waste-data", isAdmin, getWasteData);
+router.put("/waste-status/:id",isAdmin, updateWasteStatus)
 module.exports = router;

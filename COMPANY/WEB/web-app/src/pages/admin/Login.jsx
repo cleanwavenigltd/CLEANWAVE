@@ -31,8 +31,8 @@ export default function Login() {
         const { token, role } = res;
         console.log("Admin Login success: ", role);
 
-        // Save to Redux and sessionStorage
-        // dispatch(setAuth({ token, role }));
+        //Save to Redux and sessionStorage
+        dispatch(setAuth({ token, role }));
 
         // Start token timer
         startTokenTimer(token);

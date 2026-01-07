@@ -58,7 +58,7 @@ exports.createPickupRequest = async (req, res) => {
 };
 exports.wastePickupRequest = async (req, res) => {
   try {
-    const { category, kg, note } = req.body;
+    const { category,subcategory, kg, note } = req.body;
     const userId = req.user.userId;
 
     if (!userId || !kg || !category) {
@@ -69,6 +69,7 @@ exports.wastePickupRequest = async (req, res) => {
       userId,
       kg,
       category,
+      subcategory,
       note,
     });
 

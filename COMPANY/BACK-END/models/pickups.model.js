@@ -70,7 +70,7 @@ const getPickupCount = async (userId) => {
     .first();
   return parseInt(pickups?.count || 0, 10);
 };
-const createWastePickup = async ({ userId, category, kg, note }) => {
+const createWastePickup = async ({ userId, category,subcategory, kg, note }) => {
   try {
     const wasteBank = await knex("Users").where({ id: userId }).first();
     const state = wasteBank.state;
@@ -78,7 +78,8 @@ const createWastePickup = async ({ userId, category, kg, note }) => {
     const [pickup] = await knex("Waste_pickups")
       .insert({
         user_id: userId,
-        waste_type: category,
+        category,
+        subcategory,
         kg,
         info: note,
         location: state + "" + wasteBank.lga,

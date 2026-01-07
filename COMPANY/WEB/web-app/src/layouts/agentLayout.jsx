@@ -3,7 +3,7 @@ import { Home, Wallet, User, Users, Truck } from "lucide-react";
 import HomePage from "../pages/agent/components/Home";
 import Pickups from "../pages/agent/components/Pickups";
 import WalletPage from "../components/Wallet";
-import Profile from "../pages/agent/components/Profile";
+import Profile from "../components/Profile";
 import { PageProvider } from "../contexts/PageContext";
 import { useUser } from "../contexts/UserContext";
 import Header from "./Header";

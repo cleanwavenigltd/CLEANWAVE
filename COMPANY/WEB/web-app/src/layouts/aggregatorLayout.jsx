@@ -4,7 +4,7 @@ import Header from "./Header";
 import HomePage from "../pages/aggregator/components/Home";
 import Community from "../pages/aggregator/components/Community";
 import WalletPage from "../components/Wallet";
-import Profile from "../pages/aggregator/components/Profile";
+import Profile from "../components/Profile";
 import { PageProvider } from "../contexts/PageContext";
 import { useUser } from "../contexts/UserContext";
 export default function Agg() {

@@ -5,7 +5,8 @@ exports.updateBalance = async (id, amount, trx) => {
   try {
     trx = trx || knex;
     if (!amount || isNaN(amount)) {
-      throw new Error("Invalid amount");
+      console.log(amount)
+      throw new Error("Invalid amount",amount);
     }
     if (id) {
       await trx("Wallet")

@@ -60,9 +60,9 @@ export const getAllWasteData = async () => {
   }
 };
 
-export const updateWasteStatus = async (wasteId, newStatus) => {
+export const updateWasteStatus = async (id, newStatus) => {
   try {
-    const response = await api.put(`/admin/waste-status/${wasteId}`, {
+    const response = await api.put(`/admin/waste-status/${id}`, {
       status: newStatus,
     });
 

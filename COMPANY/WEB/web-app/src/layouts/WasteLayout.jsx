@@ -4,7 +4,7 @@ import Header from "./Header";
 import HomePage from "../pages/waste/components/Home";
 import Pickups from "../pages/waste/components/Pickups";
 import WalletPage from "../components/Wallet";
-import Profile from "../pages/waste/components/Profile";
+import Profile from "../components/Profile";
 import { PageProvider } from "../contexts/PageContext";
 import { useUser } from "../contexts/UserContext";
 export default function WasteLayout() {

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const AdminProtect = ({ children }) => {
   const role = useSelector((state) => state.auth.role);
-
+  console.log("Admin role ::",role)
   if (role !== "admin") {
     return <Navigate to="/" replace />;
   }

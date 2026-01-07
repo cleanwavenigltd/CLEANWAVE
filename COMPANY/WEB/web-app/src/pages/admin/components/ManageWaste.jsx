@@ -26,7 +26,8 @@ export default function SearchableWasteAdmin() {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      await updateWasteStatus(id, newStatus);
+      const resp = await updateWasteStatus(id, newStatus);
+      console.log("This is the Response for status : ", resp);
       setWasteData((prev) =>
         prev.map((item) =>
           item.id === id ? { ...item, status: newStatus } : item
@@ -41,7 +42,7 @@ export default function SearchableWasteAdmin() {
   const filteredData = wasteData.filter((item) => {
     const matchesTab = activeTab === "all" ? true : item.status === activeTab;
     const matchesSearch =
-      item.waste_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.info.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
@@ -127,7 +128,9 @@ export default function SearchableWasteAdmin() {
                   {item.status}
                 </span>
               </div>
-              <h2 className="text-xl font-bold text-slate-800">{item.waste_type}   {item.kg}kg</h2>
+              <h2 className="text-xl font-bold text-slate-800">
+                {item.category} {item.kg}kg
+              </h2>
               <p className="text-slate-500 text-sm mt-2 mb-6 leading-relaxed">
                 {item.info}
               </p>

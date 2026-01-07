@@ -92,7 +92,7 @@ const HomePage = ({ onSwitch }) => {
       </div>
 
       {/* Recent Activity */}
-      {/* <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-white rounded-xl shadow-md p-6">
         <h2 className="text-lg font-semibold mb-4 text-gray-800">
           Recent Activity
         </h2>
@@ -112,7 +112,7 @@ const HomePage = ({ onSwitch }) => {
             </span>
           </div>
         </div>
-      </div> */}
+      </div>
 
       {showPickups && <Pickups onClose={() => setShowPickups(false)} />}
     </div>

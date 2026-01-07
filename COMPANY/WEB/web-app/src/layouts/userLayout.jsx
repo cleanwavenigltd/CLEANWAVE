@@ -4,7 +4,7 @@ import HomePage from "../pages/user/components/Home";
 import Pickups from "../pages/user/components/Pickups";
 import { PageProvider } from "../contexts/PageContext";
 import WalletPage from "../components/Wallet";
-import Profile from "../pages/user/components/Profile";
+import Profile from "../components/Profile";
 import Header from "./Header";
 export default function UserLayout({ onSwitch }) {
   const [activeTab, setActiveTab] = useState("home");

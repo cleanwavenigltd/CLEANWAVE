@@ -47,18 +47,18 @@ export default function App() {
             <Route
               path="/dashboard"
               element={
-                // <AdminProtect>
+                <AdminProtect>
                   <Dashboard />
-                // </AdminProtect>
+                </AdminProtect>
               }
             />
             {/* unprotedted Home before Testing*/}
             <Route
               path="/home"
               element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <Home />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               }
             />
             <Route
@@ -73,16 +73,16 @@ export default function App() {
               path="/aggregator"
               element={
                 <AggregatorProtect>
-                <AggregatorHome />
+                  <AggregatorHome />
                 </AggregatorProtect>
               }
             />
             <Route
               path="/agent"
               element={
-                // <AgentProtect>
+                <AgentProtect>
                   <AgentHome />
-                // </AgentProtect>
+                </AgentProtect>
               }
             />
             <Route path="*" element={<Navigate to="/" />} />

@@ -6,7 +6,8 @@ exports.up = function (knex) {
   return knex.schema.createTable("Waste_pickups", (table) => {
     table.increments("id").primary();
     table.string("user_id").notNullable();
-    table.string("waste_type").notNullable();
+    table.string("category").notNullable();
+    table.string("subcategory").nullable();
     table.decimal("kg", 10, 2).notNullable();
     table.string("info");
     table.string("location").notNullable();
