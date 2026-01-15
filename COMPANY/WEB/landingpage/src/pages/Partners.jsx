@@ -1,12 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Building, Shield, Users, Zap } from "lucide-react";
+import { Building, Shield, Users } from "lucide-react";
 
 const partnerCategories = [
   {
     title: "Corporate Partners",
-    description:
-      "Leading companies committed to sustainable waste management and circular economy initiatives.",
+    description: "Leading companies committed to sustainable waste management and circular economy initiatives.",
     icon: Building,
     partners: [
       "Nigerian Breweries PLC",
@@ -18,8 +17,7 @@ const partnerCategories = [
   },
   {
     title: "Government & Development Partners",
-    description:
-      "Public sector entities and international development organizations supporting our mission.",
+    description: "Public sector entities and international development organizations supporting our mission.",
     icon: Shield,
     partners: [
       "Federal Ministry of Environment",
@@ -30,22 +28,8 @@ const partnerCategories = [
     ],
   },
   {
-    title: "Startups & Innovation Partners",
-    description:
-      "Innovative startups and tech companies driving waste management solutions and digital transformation.",
-    icon: Zap,
-    partners: [
-      { name: "Cleanwave Recycling", link: "https://cleanwaverecycling.ng" },
-      "EcoTech Solutions",
-      "WasteWise Technologies",
-      "GreenCycle Innovations",
-      "Circular Economy Labs",
-    ],
-  },
-  {
     title: "Community Stakeholders",
-    description:
-      "Local communities, NGOs, and grassroots organizations working alongside us.",
+    description: "Local communities, NGOs, and grassroots organizations working alongside us.",
     icon: Users,
     partners: [
       "Local Government Associations",
@@ -91,8 +75,7 @@ export default function Partners() {
             Partners & Stakeholders
           </h1>
           <p className="text-lg text-brand-text/70 max-w-2xl mx-auto">
-            Building strong alliances to scale sustainable waste management
-            across Nigeria.
+            Building strong alliances to scale sustainable waste management across Nigeria.
           </p>
         </motion.div>
 
@@ -111,7 +94,7 @@ export default function Partners() {
             >
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-brand-primary rounded-xl flex items-center justify-center mr-4">
-                  <category.icon className="w-10 h-6 text-white" />
+                  <category.icon className="w-10 h-6  text-white" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold text-brand-primary">
@@ -126,26 +109,10 @@ export default function Partners() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {category.partners.map((partner) => (
                   <div
-                    key={typeof partner === "string" ? partner : partner.name}
-                    className={`bg-brand-background p-4 rounded-lg border border-brand-secondary/20 ${
-                      typeof partner === "object" && partner.link
-                        ? "hover:bg-brand-primary/5 cursor-pointer transition-colors duration-300"
-                        : ""
-                    }`}
-                    onClick={
-                      typeof partner === "object" && partner.link
-                        ? () => window.open(partner.link, "_blank")
-                        : undefined
-                    }
+                    key={partner}
+                    className="bg-brand-background p-4 rounded-lg border border-brand-secondary/20"
                   >
-                    <p className="font-medium text-brand-text">
-                      {typeof partner === "string" ? partner : partner.name}
-                    </p>
-                    {typeof partner === "object" && partner.link && (
-                      <p className="text-xs text-brand-primary mt-1 hover:underline">
-                        Visit Website →
-                      </p>
-                    )}
+                    <p className="font-medium text-brand-text">{partner}</p>
                   </div>
                 ))}
               </div>
@@ -164,8 +131,7 @@ export default function Partners() {
             Interested in Partnership?
           </h3>
           <p className="text-lg text-brand-text/70 mb-8 max-w-xl mx-auto">
-            Join our network of stakeholders working to transform Nigeria's
-            waste management landscape.
+            Join our network of stakeholders working to transform Nigeria's waste management landscape.
           </p>
           <a
             href="/contact"

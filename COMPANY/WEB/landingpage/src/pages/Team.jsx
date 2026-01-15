@@ -9,12 +9,12 @@ const managementTeam = [
     bio: "Visionary leader with 15+ years in waste management and sustainable development across Africa.",
   },
   {
-    name: "Sarah Okon",
+    name: "Muhammad Auwal",
     role: "Chief Operations Officer",
     bio: "Expert in logistics and supply chain management, specializing in circular economy solutions.",
   },
   {
-    name: "Michael Eze",
+    name: "Muhammada ALiyu Muazu",
     role: "Chief Technology Officer",
     bio: "Technology innovator focused on digital platforms for waste management and community engagement.",
   },
