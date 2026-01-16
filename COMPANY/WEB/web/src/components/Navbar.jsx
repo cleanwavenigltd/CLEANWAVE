@@ -11,7 +11,7 @@ const NavItem = ({ to, children }) => (
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `px-4 py-3 rounded-lg font-medium transition-colors ${
+        `px-2 py-2 rounded-lg font-medium transition-colors text-sm ${
           isActive
             ? "bg-brand-primary/10 text-brand-primary"
             : "text-brand-text/80 hover:text-brand-primary"
@@ -57,12 +57,14 @@ export default function Navbar() {
             </div>
           </div>
         </Link>
-        <nav className="hidden md:flex items-center gap-2">
+        <nav className="hidden md:flex items-center gap-4 flex-wrap justify-center">
           <NavItem to="/">Home</NavItem>
-          <NavItem to="/about">About</NavItem>
-          <NavItem to="/what-we-do">What We Do</NavItem>
-          <NavItem to="/programs">Programs</NavItem>
+          <NavItem to="/about">About SIH</NavItem>
+          <NavItem to="/what-we-do">What We Stand For</NavItem>
+          <NavItem to="/programs">Programs </NavItem>
+          <NavItem to="/coworking">Space Facilities</NavItem>
           <NavItem to="/impact">Impact</NavItem>
+          <NavItem to="/team">Our Team</NavItem>
           <NavItem to="/get-involved">Get Involved</NavItem>
           <NavItem to="/contact">Contact</NavItem>
         </nav>
@@ -97,14 +99,14 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="py-3 text-brand-text/80 hover:text-brand-primary font-medium transition-colors"
             >
-              About
+              About SIH
             </Link>
             <Link
               to="/what-we-do"
               onClick={() => setOpen(false)}
               className="py-3 text-brand-text/80 hover:text-brand-primary font-medium transition-colors"
             >
-              What We Do
+              What We Stand For
             </Link>
             <Link
               to="/programs"
@@ -112,6 +114,20 @@ export default function Navbar() {
               className="py-3 text-brand-text/80 hover:text-brand-primary font-medium transition-colors"
             >
               Programs
+            </Link>
+            <Link
+              to="/coworking"
+              onClick={() => setOpen(false)}
+              className="py-3 text-brand-text/80 hover:text-brand-primary font-medium transition-colors"
+            >
+              Our Space Facilities
+            </Link>
+            <Link
+              to="/team"
+              onClick={() => setOpen(false)}
+              className="py-3 text-brand-text/80 hover:text-brand-primary font-medium transition-colors"
+            >
+              Our Team
             </Link>
             <Link
               to="/impact"

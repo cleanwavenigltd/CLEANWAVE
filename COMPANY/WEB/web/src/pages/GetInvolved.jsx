@@ -5,28 +5,40 @@ import CTA from "../components/CTA";
 
 const ctas = [
   {
-    title: "Join Programs",
-    description: "Enroll in our training and Green Clubs.",
-    ctaText: "View Programs",
+    title: "Join a training",
+    description: "Enroll in our skills and certification programs.",
+    ctaText: "Join Training",
     ctaHref: "/programs",
   },
   {
-    title: "Partner or Donate",
-    description: "Support our work through partnership or donations.",
-    ctaText: "Partner",
-    ctaHref: "/partners",
+    title: "Use the co-working space",
+    description: "Reserve a desk or meeting room.",
+    ctaText: "Reserve Space",
+    ctaHref: "/coworking",
   },
   {
-    title: "Volunteer or Intern",
-    description: "Volunteer opportunities and internships available.",
+    title: "Volunteer or intern",
+    description: "Opportunities for volunteering and internships.",
     ctaText: "Volunteer",
     ctaHref: "/contact",
   },
   {
-    title: "Book Co-working Space",
-    description: "Reserve a desk or meeting room.",
-    ctaText: "Book",
-    ctaHref: "/coworking",
+    title: "Sponsor a program",
+    description: "Support our initiatives through sponsorship.",
+    ctaText: "Sponsor",
+    ctaHref: "/partners",
+  },
+  {
+    title: "Partner on research",
+    description: "Collaborate on research projects.",
+    ctaText: "Partner",
+    ctaHref: "/partners",
+  },
+  {
+    title: "Support a community project",
+    description: "Contribute to community action days.",
+    ctaText: "Support",
+    ctaHref: "/contact",
   },
 ];
 

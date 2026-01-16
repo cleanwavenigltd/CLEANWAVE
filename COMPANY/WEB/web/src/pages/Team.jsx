@@ -1,27 +1,32 @@
 import React from "react";
 import { motion } from "framer-motion";
 import TeamMemberCard from "../components/TeamMemberCard";
+// import { logo } from "../assets/logo.png";
 
 const managementTeam = [
   {
     name: "Aminu Balarabe",
     role: "Founder & CEO",
     bio: "Visionary leader with 15+ years in waste management and sustainable development across Africa.",
+    image: "https://via.placeholder.com/96x96?text=AB",
   },
   {
     name: "Sarah Okon",
     role: "Chief Operations Officer",
     bio: "Expert in logistics and supply chain management, specializing in circular economy solutions.",
+    image: "http://localhost:5173/src/assets/logo.png", //"https://via.placeholder.com/96x96?text=SO",
   },
   {
-    name: "Michael Eze",
+    name: "Muhammad Aliyu Muazu",
     role: "Chief Technology Officer",
     bio: "Technology innovator focused on digital platforms for waste management and community engagement.",
+    image: "http://localhost:5173/src/assets/CTO.jpeg",
   },
   {
     name: "Grace Nwosu",
     role: "Chief Financial Officer",
     bio: "Financial strategist with experience in impact investing and sustainable business development.",
+    image: "https://via.placeholder.com/96x96?text=GN",
   },
 ];
 
@@ -30,16 +35,19 @@ const boardMembers = [
     name: "Dr. Fatima Ibrahim",
     role: "Board Chair",
     bio: "Environmental policy expert and former government advisor on sustainability initiatives.",
+    image: "https://via.placeholder.com/96x96?text=FI",
   },
   {
     name: "Prof. Ahmed Musa",
     role: "Board Member",
     bio: "Academic leader in environmental science and circular economy research.",
+    image: "https://via.placeholder.com/96x96?text=AM",
   },
   {
     name: "Mrs. Adanna Okafor",
     role: "Board Member",
     bio: "Corporate sustainability director with multinational experience in waste management.",
+    image: "https://via.placeholder.com/96x96?text=AO",
   },
 ];
 
@@ -105,6 +113,7 @@ export default function Team() {
                 name={member.name}
                 role={member.role}
                 bio={member.bio}
+                image={member.image}
               />
             ))}
           </motion.div>
@@ -136,6 +145,7 @@ export default function Team() {
                 name={member.name}
                 role={member.role}
                 bio={member.bio}
+                image={member.image}
               />
             ))}
           </motion.div>

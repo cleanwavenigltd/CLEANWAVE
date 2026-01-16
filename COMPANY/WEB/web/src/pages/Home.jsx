@@ -32,11 +32,47 @@ export default function Home() {
           subtitle={null}
         />
         <p className="text-lg text-gray-700 leading-relaxed max-w-4xl">
-          Cleanwave Sustainability & Innovation Hub (SIH) is a pioneering
-          climate-focused hub based in Northern Nigeria, established to drive
-          sustainability, circular economy solutions, and climate-smart
-          innovation through education, technology, and entrepreneurship.
+          Cleanwave Sustainability & Innovation Hub (SIH) is a solution-driven
+          hub dedicated to tackling real challenges: waste management,
+          unemployment, climate pressure, and limited access to innovation
+          spaces while harnessing the energy of talented youth, creative
+          entrepreneurs, and strong communities. As the first sustainability hub
+          in Northern Nigeria, we are committed to building practical skills,
+          nurturing local innovation, supporting emerging enterprises, and
+          creating a shared space where people and ideas can grow into lasting
+          impact.
         </p>
+        <div className="mt-8">
+          <ul className="flex flex-wrap justify-center gap-4 text-brand-primary font-semibold">
+            <li>GREEN SKILLS</li>
+            <li>GUIDANCE</li>
+            <li>SOLUTIONS</li>
+            <li>IDEAS</li>
+            <li>COLLABORATIONS</li>
+          </ul>
+        </div>
+        <div className="mt-8 grid md:grid-cols-2 gap-8">
+          <div className="card">
+            <h4 className="font-semibold text-xl text-brand-primary">VISION</h4>
+            <p className="mt-2 text-gray-700">
+              To grow into a leading innovation and sustainability hub in
+              Africa, where practical skills, enterprise, and collaboration
+              drive environmental responsibility and inclusive economic
+              opportunity.
+            </p>
+          </div>
+          <div className="card">
+            <h4 className="font-semibold text-xl text-brand-primary">
+              MISSION
+            </h4>
+            <p className="mt-2 text-gray-700">
+              To equip individuals, startups, institutions, and communities with
+              skills, workspace, guidance, and partnerships that transform ideas
+              into practical solutions, sustainable livelihoods, and measurable
+              social impact.
+            </p>
+          </div>
+        </div>
 
         <motion.div
           className="mt-12"
@@ -45,8 +81,8 @@ export default function Home() {
           variants={sectionVariants}
           viewport={{ once: true, margin: "-50px" }}
         >
-          <SectionHeader title="Key Focus Areas" subtitle="" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+          <SectionHeader title="What We Stand For" subtitle="" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
             {FOCUS_AREAS.map((a, index) => (
               <motion.div
                 key={a.id}
@@ -65,6 +101,11 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+          <div className="mt-12 text-center">
+            <a href="/programs" className="btn-primary">
+              Explore Our Programs
+            </a>
+          </div>
         </motion.div>
 
         <motion.div
@@ -76,10 +117,10 @@ export default function Home() {
         >
           <SectionHeader title="Impact Highlights" subtitle="" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-            <ImpactCounter label="Youth & Students Trained" value={1200} />
-            <ImpactCounter label="Schools & Communities Reached" value={85} />
-            <ImpactCounter label="Startups Supported" value={45} />
-            <ImpactCounter label="Jobs & Green Skills Created" value={300} />
+            <ImpactCounter label="Youth & Students" value={1200} />
+            <ImpactCounter label="Schools & Communities" value={85} />
+            <ImpactCounter label="Startups" value={45} />
+            <ImpactCounter label="Green Jobs" value={300} />
           </div>
         </motion.div>
 

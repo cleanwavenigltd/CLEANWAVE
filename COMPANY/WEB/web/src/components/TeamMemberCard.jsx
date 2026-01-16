@@ -11,18 +11,24 @@ export default function TeamMemberCard({ name, role, bio, image }) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       viewport={{ once: true }}
     >
-      <div className="w-24 h-24 bg-brand-primary rounded-full mx-auto mb-4 flex items-center justify-center">
-        <span className="text-2xl font-bold text-white">{name.charAt(0)}</span>
+      <div className="w-24 h-24 bg-brand-primary rounded-full mx-auto mb-4 flex items-center justify-center overflow-hidden">
+        {image ? (
+          <img
+            src={`${image}`}
+            alt={name}
+            className="w-full h-full object-cover rounded-full"
+          />
+        ) : (
+          <span className="text-2xl font-bold text-white">
+            {name.charAt(0)}
+          </span>
+        )}
       </div>
       <h3 className="text-xl font-semibold text-brand-text text-center mb-2">
         {name}
       </h3>
-      <p className="text-brand-primary font-medium text-center mb-3">
-        {role}
-      </p>
-      <p className="text-brand-text/70 text-center leading-relaxed">
-        {bio}
-      </p>
+      <p className="text-brand-primary font-medium text-center mb-3">{role}</p>
+      <p className="text-brand-text/70 text-center leading-relaxed">{bio}</p>
     </motion.div>
   );
 }

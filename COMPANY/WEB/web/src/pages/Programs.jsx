@@ -6,28 +6,38 @@ import { Users, Award, Lightbulb, Briefcase, Calendar } from "lucide-react";
 
 const programs = [
   {
-    title: "Green Clubs for Schools",
-    desc: "Climate education clubs for nursery, primary, and secondary schools with annual graduations and awards.",
+    title: "Green Skills & Certifications",
+    desc: "Practical training that equips young people with abilities in recycling, eco-design, energy awareness, and sustainable trades that can become real livelihoods.",
     icon: <Users />,
   },
   {
-    title: "Trainings & Certifications",
-    desc: "Short courses on sustainability, circular economy, climate leadership, and green skills.",
+    title: "Schools Climate & Creativity Clubs",
+    desc: "Interactive programs for primary and secondary schools that blend environmental awareness with innovation challenges and fun projects.",
     icon: <Award />,
   },
   {
-    title: "Innovation Labs & Accelerator",
-    desc: "Support for startups, researchers, and innovators building climate solutions.",
+    title: "Innovation Labs & Bootcamps",
+    desc: "Short, intensive programs where participants experiment, design prototypes, and receive guidance from mentors and industry voices.",
     icon: <Lightbulb />,
   },
   {
-    title: "Fellowships & Internships (SIWES)",
-    desc: "Practical learning opportunities for students and young professionals.",
+    title: "Research & Community Dialogues",
+    desc: "The hub creates spaces for studies, town conversations, and policy talks so solutions reflect the true needs of the people.",
     icon: <Briefcase />,
   },
   {
-    title: "Annual Climate & Innovation Conference",
-    desc: "A regional convening for knowledge sharing, partnerships, and innovation showcase.",
+    title: "Community Action Days",
+    desc: "Neighborhood cleanups, awareness walks, and practical demonstrations that show communities how small steps create big change.",
+    icon: <Calendar />,
+  },
+  {
+    title: "Startup Incubation & Acceleration",
+    desc: "Guidance, workspace, networks, and coaching for early-stage businesses solving social, environmental, and local economic problems.",
+    icon: <Users />,
+  },
+  {
+    title: "Conferences & Exhibitions",
+    desc: "Events that bring together innovators, institutions, government, and citizens to showcase solutions and spark partnerships.",
     icon: <Calendar />,
   },
 ];
@@ -56,6 +66,17 @@ export default function Programs() {
             </Card>
           </motion.div>
         ))}
+      </div>
+      <div className="mt-12 text-center">
+        <a href="/contact" className="btn-primary mr-4">
+          Apply as an intern/Volunteer
+        </a>
+        <a
+          href="/partners"
+          className="inline-block border-2 border-brand-primary text-brand-primary px-8 py-4 rounded-2xl hover:bg-brand-primary hover:text-white transition-all duration-300 font-medium"
+        >
+          Partner With Us
+        </a>
       </div>
     </section>
   );

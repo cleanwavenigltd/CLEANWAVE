@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import SectionHeader from "../components/SectionHeader";
 import ContactForm from "../components/ContactForm";
+import { Facebook, Twitter, Instagram } from "lucide-react";
 
 export default function Contact() {
   return (
@@ -28,6 +29,32 @@ export default function Contact() {
             <p className="text-gray-600">Email: cleanwavenigltd@gmail.com</p>
             <p className="text-gray-600">Phone: 09032279037</p>
             <p className="text-gray-600">Location: Kano, Nigeria</p>
+          </div>
+          <div className="mt-6">
+            <p className="text-gray-600 mb-2">Follow Us:</p>
+            <div className="flex gap-4">
+              <a
+                href="#"
+                className="text-brand-primary hover:text-brand-primary/80"
+              >
+                <Facebook size={24} />
+              </a>
+              <a
+                href="#"
+                className="text-brand-primary hover:text-brand-primary/80"
+              >
+                <Twitter size={24} />
+              </a>
+              <a
+                href="#"
+                className="text-brand-primary hover:text-brand-primary/80"
+              >
+                <Instagram size={24} />
+              </a>
+            </div>
+          </div>
+          <div className="mt-8 text-center text-gray-500">
+            © 2026 Cleanwave SIH
           </div>
         </motion.div>
         <motion.div

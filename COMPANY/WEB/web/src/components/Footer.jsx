@@ -55,9 +55,22 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-brand-primary/10 bg-white py-4">
-        <div className="container mx-auto px-4 text-sm text-brand-text/60">
-          © {new Date().getFullYear()} Cleanwave Sustainability & Innovation Hub
-          (SIH). All rights reserved.
+        <div className="container mx-auto px-4 text-sm text-brand-text/60 flex justify-between items-center">
+          <span>
+            © {new Date().getFullYear()} Cleanwave Sustainability & Innovation
+            Hub (SIH). All rights reserved.
+          </span>
+          <span>
+            Website{" "}
+            <a
+              href="https://mmdmuazu.github.io/portfolio/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-brand-primary transition-colors"
+            >
+              created by Muhammad Aliyu Muazu
+            </a>
+          </span>
         </div>
       </div>
     </footer>
