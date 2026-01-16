@@ -18,22 +18,30 @@ export default function Footer() {
                 <div className="font-bold text-xl text-brand-primary">
                   Cleanwave Recycling
                 </div>
-                <div className="text-sm text-white/60">
-                  Nigeria Limited
-                </div>
+                <div className="text-sm text-white/60">Nigeria Limited</div>
               </div>
             </div>
             <p className="text-white/80 mb-6 max-w-md">
-              Transforming waste into value across Nigeria through structured recycling solutions and community empowerment.
+              Transforming waste into value across Nigeria through structured
+              recycling solutions and community empowerment.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-white/60 hover:text-brand-primary transition-colors">
+              <a
+                href="#"
+                className="text-white/60 hover:text-brand-primary transition-colors"
+              >
                 <Facebook className="w-6 h-6" />
               </a>
-              <a href="#" className="text-white/60 hover:text-brand-primary transition-colors">
+              <a
+                href="#"
+                className="text-white/60 hover:text-brand-primary transition-colors"
+              >
                 <Twitter className="w-6 h-6" />
               </a>
-              <a href="#" className="text-white/60 hover:text-brand-primary transition-colors">
+              <a
+                href="#"
+                className="text-white/60 hover:text-brand-primary transition-colors"
+              >
                 <Linkedin className="w-6 h-6" />
               </a>
             </div>
@@ -43,22 +51,34 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-white/60 hover:text-brand-primary transition-colors">
+                <Link
+                  to="/"
+                  className="text-white/60 hover:text-brand-primary transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="text-white/60 hover:text-brand-primary transition-colors">
+                <Link
+                  to="/team"
+                  className="text-white/60 hover:text-brand-primary transition-colors"
+                >
                   Our Team
                 </Link>
               </li>
               <li>
-                <Link to="/partners" className="text-white/60 hover:text-brand-primary transition-colors">
+                <Link
+                  to="/partners"
+                  className="text-white/60 hover:text-brand-primary transition-colors"
+                >
                   Partners
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-white/60 hover:text-brand-primary transition-colors">
+                <Link
+                  to="/contact"
+                  className="text-white/60 hover:text-brand-primary transition-colors"
+                >
                   Contact
                 </Link>
               </li>
@@ -70,7 +90,9 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center">
                 <Mail className="w-5 h-5 mr-3 text-brand-primary" />
-                <span className="text-white/80">info@cleanwaverecycling.ng</span>
+                <span className="text-white/80">
+                  info@cleanwaverecycling.ng
+                </span>
               </div>
               <div className="flex items-center">
                 <Phone className="w-5 h-5 mr-3 text-brand-primary" />
@@ -85,9 +107,22 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 mt-8 pt-8 text-center">
-          <p className="text-white/60">
-            © 2026 Cleanwave Recycling Nigeria Limited. All rights reserved.
-          </p>
+          <div className="flex justify-between items-center text-white/60">
+            <span>
+              © 2026 Cleanwave Recycling Nigeria Limited. All rights reserved.
+            </span>
+            <span>
+              Website{" "}
+              <a
+                href="https://mmdmuazu.github.io/portfolio/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-brand-primary transition-colors"
+              >
+                created by Muhammad Aliyu Muazu
+              </a>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
