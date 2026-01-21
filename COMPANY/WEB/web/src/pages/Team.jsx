@@ -11,7 +11,7 @@ const managementTeam = [
     image: "https://via.placeholder.com/96x96?text=AB",
   },
   {
-    name: "Sarah Okon",
+    name: "Amir",
     role: "Chief Operations Officer",
     bio: "Expert in logistics and supply chain management, specializing in circular economy solutions.",
     image: "http://localhost:5173/src/assets/logo.png", //"https://via.placeholder.com/96x96?text=SO",
@@ -20,10 +20,10 @@ const managementTeam = [
     name: "Muhammad Aliyu Muazu",
     role: "Chief Technology Officer",
     bio: "Technology innovator focused on digital platforms for waste management and community engagement.",
-    image: "http://localhost:5173/src/assets/CTO.jpeg",
+    image: "http://localhost:5173/src/assets/logo.png",
   },
   {
-    name: "Grace Nwosu",
+    name: "Amir",
     role: "Chief Financial Officer",
     bio: "Financial strategist with experience in impact investing and sustainable business development.",
     image: "https://via.placeholder.com/96x96?text=GN",
@@ -32,7 +32,7 @@ const managementTeam = [
 
 const boardMembers = [
   {
-    name: "Dr. Fatima Ibrahim",
+    name: "Amir",
     role: "Board Chair",
     bio: "Environmental policy expert and former government advisor on sustainability initiatives.",
     image: "https://via.placeholder.com/96x96?text=FI",
@@ -44,7 +44,7 @@ const boardMembers = [
     image: "https://via.placeholder.com/96x96?text=AM",
   },
   {
-    name: "Mrs. Adanna Okafor",
+    name: "Amir",
     role: "Board Member",
     bio: "Corporate sustainability director with multinational experience in waste management.",
     image: "https://via.placeholder.com/96x96?text=AO",

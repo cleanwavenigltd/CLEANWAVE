@@ -62,9 +62,9 @@ export default function Navbar() {
           <NavItem to="/about">About SIH</NavItem>
           <NavItem to="/what-we-do">What We Stand For</NavItem>
           <NavItem to="/programs">Programs </NavItem>
-          <NavItem to="/coworking">Space Facilities</NavItem>
+          <NavItem to="/coworking">Space </NavItem>
           <NavItem to="/impact">Impact</NavItem>
-          <NavItem to="/team">Our Team</NavItem>
+          <NavItem to="/team">Team</NavItem>
           <NavItem to="/get-involved">Get Involved</NavItem>
           <NavItem to="/contact">Contact</NavItem>
         </nav>
