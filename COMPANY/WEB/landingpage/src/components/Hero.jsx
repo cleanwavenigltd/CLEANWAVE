@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import AppDownload from "./AppDownload";
+import { Link } from "react-router-dom";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -55,7 +56,8 @@ export default function Hero() {
           className="mt-12 flex flex-col md:flex-row gap-6 justify-center"
         >
           <motion.a
-            href="/contact"
+            as={Link}
+            to="/contact"
             className="btn-primary"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -63,7 +65,9 @@ export default function Hero() {
             Request Pickup
           </motion.a>
           <motion.a
-            onClick={()=> window.location.href="/partners"}
+            as={Link}
+            to="/partners"
+            onClick={() => window.location = "/partners"}
             className="inline-block border-2 border-brand-primary text-brand-primary px-8 py-4 rounded-2xl hover:bg-brand-primary hover:text-white transition-all duration-300 font-medium"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
