@@ -1,36 +1,48 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, User, Truck, Warehouse, DollarSign, Building } from "lucide-react";
+import {
+  ArrowRight,
+  User,
+  Truck,
+  Warehouse,
+  DollarSign,
+  Building,
+} from "lucide-react";
 
 const steps = [
   {
     id: 1,
     title: "User Requests Pickup",
-    description: "Waste generators request collection through our platform or app.",
+    description:
+      "Waste generators request collection through our platform or app.",
     icon: User,
   },
   {
     id: 2,
     title: "Agent Assigned",
-    description: "A local agent in the same local government area is assigned to collect the waste.",
+    description:
+      "A local agent in the same local government area is assigned to collect the waste.",
     icon: Truck,
   },
   {
     id: 3,
     title: "Waste Collected & Delivered",
-    description: "Agent collects waste and delivers it to the nearest Waste Bank for sorting and storage.",
+    description:
+      "Agent collects waste and delivers it to the nearest Waste Bank for sorting and storage.",
     icon: Warehouse,
   },
   {
     id: 4,
     title: "Payment Processed",
-    description: "User and Agent receive payment after successful drop-off at the Waste Bank.",
+    description:
+      "User and Agent receive payment after successful drop-off at the Waste Bank.",
     icon: DollarSign,
   },
   {
     id: 5,
     title: "Bulk Collection",
-    description: "When Waste Bank is full, Cleanwave collects recyclables and compensates the Waste Bank.",
+    description:
+      "When Waste Bank is full, Cleanwave collects recyclables and compensates the Waste Bank.",
     icon: Building,
   },
 ];
@@ -69,7 +81,8 @@ export default function ProcessSteps() {
             How Cleanwave Works
           </h2>
           <p className="text-lg text-brand-text/70 max-w-2xl mx-auto">
-            Our streamlined process connects waste generators with local recyclers, creating value at every step.
+            Our streamlined process connects waste generators with local
+            recyclers, creating value at every step.
           </p>
         </motion.div>
 
@@ -80,7 +93,7 @@ export default function ProcessSteps() {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
-          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-brand-secondary/20 transform -translate-y-1/2 z-0"></div>
+          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5  transform -translate-y-1/2 z-0"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 relative z-10">
             {steps.map((step, index) => (

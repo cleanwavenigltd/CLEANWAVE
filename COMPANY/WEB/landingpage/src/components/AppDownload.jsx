@@ -102,13 +102,20 @@ export default function AppDownload() {
 
           <div className="flex justify-center md:justify-end">
             <motion.a
-              href="#"
+              href="web.cleanwave.green"
+              onClick={() =>
+                (window.location.href = "https://web.cleanwave.green")
+              }
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center px-8 py-4 bg-brand-primary text-white rounded-xl hover:bg-brand-secondary transition-colors duration-300 font-medium shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Globe className="w-5 h-5 mr-2" />
-              Open Web App
+              <button className="flex items-center gap-2">
+                <Globe />
+                Open Web App
+              </button>
             </motion.a>
           </div>
         </motion.div>
