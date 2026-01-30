@@ -63,7 +63,7 @@ export default function Hero() {
             Request Pickup
           </motion.a>
           <motion.a
-            href="/partners"
+            onClick={()=> window.location.href="/partners"}
             className="inline-block border-2 border-brand-primary text-brand-primary px-8 py-4 rounded-2xl hover:bg-brand-primary hover:text-white transition-all duration-300 font-medium"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
