@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
+import logo from "../assets/logo.png";
 
 const NavItem = ({ to, children }) => (
   <motion.div
@@ -43,18 +44,12 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-4">
-          <img
-            src="/src/assets/logo.png"
-            alt="Cleanwave Logo"
-            className="h-12 w-12"
-          />
+          <img src={logo} alt="Cleanwave Logo" className="h-12 w-12" />
           <div>
             <div className="font-bold text-xl text-brand-primary">
               Cleanwave Recycling
             </div>
-            <div className="text-sm text-brand-text/60">
-              Nigeria Limited
-            </div>
+            <div className="text-sm text-brand-text/60">Nigeria Limited</div>
           </div>
         </Link>
         <nav className="hidden md:flex items-center gap-2">

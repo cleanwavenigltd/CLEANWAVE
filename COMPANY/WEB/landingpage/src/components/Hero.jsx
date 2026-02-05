@@ -1,6 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import AppDownload from "./AppDownload";
+import { Link } from "react-router-dom";
+
+const MotionLink = motion(Link);
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -42,34 +45,38 @@ export default function Hero() {
           variants={itemVariants}
           className="mt-6 text-xl text-brand-text/80 max-w-4xl mx-auto leading-relaxed font-medium"
         >
-          Cleanwave Recycling Nigeria Limited connects waste generators with local recyclers, creating jobs and building a sustainable circular economy.
+          Cleanwave Recycling Nigeria Limited connects waste generators with
+          local recyclers, creating jobs and building a sustainable circular
+          economy.
         </motion.p>
         <motion.p
           variants={itemVariants}
           className="mt-4 text-lg text-brand-text/70 max-w-3xl mx-auto leading-relaxed"
         >
-          A structured, scalable recycling platform operating across Nigeria's local governments, empowering communities through waste management and economic opportunity.
+          A structured, scalable recycling platform operating across Nigeria's
+          local governments, empowering communities through waste management and
+          economic opportunity.
         </motion.p>
         <motion.div
           variants={itemVariants}
           className="mt-12 flex flex-col md:flex-row gap-6 justify-center"
         >
-          <motion.a
-            href="/contact"
+          <MotionLink
+            to="/contact"
             className="btn-primary"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Request Pickup
-          </motion.a>
-          <motion.a
-            href="/partners"
+          </MotionLink>
+          <MotionLink
+            to="/partners"
             className="inline-block border-2 border-brand-primary text-brand-primary px-8 py-4 rounded-2xl hover:bg-brand-primary hover:text-white transition-all duration-300 font-medium"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Partner With Us
-          </motion.a>
+          </MotionLink>
         </motion.div>
 
         {/* App Download Section */}

@@ -1,5 +1,5 @@
 import { Bell, ImportIcon, LogOut, User } from "lucide-react";
-import { PageContext } from "../contexts/PageContext";
+// import { PageContext } from "../contexts/PageContext";
 import { useState, useContext } from "react";
 
 export default function Header({
@@ -12,7 +12,7 @@ export default function Header({
     { id: 1, message: "New pickup request available", time: "5m ago" },
     { id: 2, message: "Payment received", time: "1h ago" },
   ]);
-  const { setActiveTab } = useContext(PageContext);
+  // const { setActiveTab } = useContext(PageContext);
 
   return (
     <header className="bg-white shadow-sm border-b-4 border-gray-200 sticky top-0 z-40">
@@ -60,7 +60,7 @@ export default function Header({
             {/* User Avatar & Dropdown */}
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setActiveTab("profile")}
+                // onClick={() => setActiveTab("profile")}
                 className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
               >
                 <User className="w-7 h-7 rounded-full border-2 border-gray-200" />

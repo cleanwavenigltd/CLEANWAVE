@@ -18,11 +18,18 @@ import {
   transferFunds,
 } from "../services/authservice";
 import { NIGERIAN_BANKS } from "../data/banks";
+import { useSelector } from "react-redux";
 
 const Wallet = () => {
-  const [balance, setBalance] = useState(0);
+  let { transactions, wallet, pickups, isLoading, error } = useSelector(
+    (state) => state.auth,
+  );
+  // transactions = Array(transactions);
+  console.log("transactions", transactions);
+  // const [balance, setBalance] = useState(0);
+  const balance = wallet?.balance;
   const [activeTab, setActiveTab] = useState("purchase");
-  const [transactions, setTransactions] = useState([]);
+  const [Transactions, setTransactions] = useState([]);
   const [withdrawalForm, setWithdrawalForm] = useState({
     bankCode: "",
     accountNumber: "",
@@ -31,40 +38,44 @@ const Wallet = () => {
     pin: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  let [Error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [verified, setVerified] = useState(false);
   const [bankSearch, setbankSearch] = useState("");
   const [showbankDropdown, setShowbankDropdown] = useState(false);
   const [selectedbank, setSelectedBank] = useState("");
 
-  const fetchWalletData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [res, txHistory] = await Promise.all([
-        walletBalance(),
-        getTransactionHistory(),
-      ]);
-      console.log("Transaction histroy", txHistory.transactions.transactions);
-      if (res.success) {
-        setBalance(res.balance);
-        setTransactions(
-          txHistory.data || txHistory.transactions.transactions || []
-        );
-      } else {
-        setError("Failed to load wallet data");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  if ((isLoading && !wallet) || error) {
+    Error = "Failed to load wallet data";
+  }
 
-  useEffect(() => {
-    fetchWalletData();
-  }, []);
+  // const fetchWalletData = useCallback(async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const [res, txHistory] = await Promise.all([
+  //       walletBalance(),
+  //       getTransactionHistory(),
+  //     ]);
+  //     console.log("Transaction histroy", txHistory.transactions.transactions);
+  //     if (res.success) {
+  //       setBalance(res.balance);
+  //       setTransactions(
+  //         txHistory.data || txHistory.transactions.transactions || [],
+  //       );
+  //     } else {
+  //       setError("Failed to load wallet data");
+  //     }
+  //   } catch (err) {
+  //     setError("Network Error. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchWalletData();
+  // }, []);
   const [form, setForm] = useState({
     serviceType: "airtime",
     network: "",
@@ -83,24 +94,24 @@ const Wallet = () => {
   ];
 
   const validateForm = () => {
-    const errors = {};
+    const Errors = {};
     const { serviceType, network, phone, amount, dataBundle } = form;
 
-    if (!network) errors.network = "Network provider is required";
-    if (!phone) errors.phone = "Phone number is required";
+    if (!network) Errors.network = "Network provider is required";
+    if (!phone) Errors.phone = "Phone number is required";
     else if (!/^[0-9]{10,11}$/.test(phone.replace(/\D/g, "")))
-      errors.phone = "Invalid phone number";
+      Errors.phone = "Invalid phone number";
 
     if (serviceType === "data") {
-      if (!dataBundle) errors.dataBundle = "Please select a data bundle";
+      if (!dataBundle) Errors.dataBundle = "Please select a data bundle";
     } else {
-      if (!amount) errors.amount = "Amount is required";
+      if (!amount) Errors.amount = "Amount is required";
       else if (parseFloat(amount) <= 0)
-        errors.amount = "Amount must be positive";
+        Errors.amount = "Amount must be positive";
     }
 
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    setFormErrors(Errors);
+    return Object.keys(Errors).length === 0;
   };
 
   const handlePurchase = async (e) => {
@@ -175,7 +186,7 @@ const Wallet = () => {
         setVerified(false);
       }
     } catch (err) {
-      setError("Network error during account verification");
+      setError("Network Error during account verification");
       setVerified(false);
     } finally {
       setLoading(false);
@@ -188,17 +199,17 @@ const Wallet = () => {
     setSuccess(null);
 
     // Professional Validation
-    const errors = {};
-    if (!withdrawalForm.bankCode) errors.bankCode = "Select a bank";
+    const Errors = {};
+    if (!withdrawalForm.bankCode) Errors.bankCode = "Select a bank";
     if (withdrawalForm.accountNumber.length !== 10)
-      errors.accountNumber = "Invalid account number";
+      Errors.accountNumber = "Invalid account number";
     if (!withdrawalForm.amount || parseFloat(withdrawalForm.amount) < 100)
-      errors.amount = "Minimum withdrawal is ₦100";
+      Errors.amount = "Minimum withdrawal is ₦100";
     if (parseFloat(withdrawalForm.amount) > balance)
-      errors.amount = "Insufficient wallet balance";
+      Errors.amount = "Insufficient wallet balance";
 
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
+    if (Object.keys(Errors).length > 0) {
+      setFormErrors(Errors);
       return;
     }
 
@@ -208,12 +219,12 @@ const Wallet = () => {
       // await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
       const res = await transferFunds(withdrawalForm);
       if (!res.success) {
-        setError(res.error || "Withdrawal failed. Please try again.");
+        setError(res.Error || "Withdrawal failed. Please try again.");
         setLoading(false);
       } else {
         setBalance((prev) => prev - parseFloat(withdrawalForm.amount));
         setSuccess(
-          res.message || "✅ Withdrawal request submitted successfully!"
+          res.message || "✅ Withdrawal request submitted successfully!",
         );
         setVerified(false);
         fetchWalletData();
@@ -243,7 +254,7 @@ const Wallet = () => {
   };
 
   const filteredbanks = NIGERIAN_BANKS.filter((bank) =>
-    (bank.name || "").toLowerCase().includes(bankSearch.toLowerCase())
+    (bank.name || "").toLowerCase().includes(bankSearch.toLowerCase()),
   );
 
   // const selectedbank = NIGERIAN_BANKS.find(
@@ -286,10 +297,10 @@ const Wallet = () => {
         </div>
 
         {/* Alerts */}
-        {error && (
+        {Error && (
           <div className="mx-4 mt-4 bg-red-50 border border-red-200 rounded-lg p-3 flex gap-2">
             <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-sm text-red-700">{error}</p>
+            <p className="text-sm text-red-700">{Error}</p>
           </div>
         )}
         {success && (
@@ -660,7 +671,7 @@ const Wallet = () => {
                 </p>
               ) : (
                 <div className="space-y-3">
-                  {transactions.slice(-5).map((tx) => (
+                  {transactions.map((tx) => (
                     <div
                       key={tx.id}
                       className="flex justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
@@ -710,7 +721,7 @@ export default Wallet;
 //   const [balance, setBalance] = useState(0);
 //   const [activeTab, setActiveTab] = useState("purchase"); // purchase, withdraw, transactions
 //   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState(null);
+//   const [Error, setError] = useState(null);
 //   const [success, setSuccess] = useState(null);
 
 //   // Withdrawal Form State
@@ -735,15 +746,15 @@ export default Wallet;
 //   setSuccess(null);
 
 //   // Professional Validation
-//   const errors = {};
-//   if (!withdrawalForm.bankCode) errors.bankCode = "Select a bank";
-//   if (withdrawalForm.accountNumber.length !== 10) errors.accountNumber = "Invalid account number";
+//   const Errors = {};
+//   if (!withdrawalForm.bankCode) Errors.bankCode = "Select a bank";
+//   if (withdrawalForm.accountNumber.length !== 10) Errors.accountNumber = "Invalid account number";
 //   if (!withdrawalForm.amount || parseFloat(withdrawalForm.amount) < 100)
-//       errors.amount = "Minimum withdrawal is ₦100";
-//   if (parseFloat(withdrawalForm.amount) > balance) errors.amount = "Insufficient wallet balance";
+//       Errors.amount = "Minimum withdrawal is ₦100";
+//   if (parseFloat(withdrawalForm.amount) > balance) Errors.amount = "Insufficient wallet balance";
 
-//   if (Object.keys(errors).length > 0) {
-//     setFormErrors(errors);
+//   if (Object.keys(Errors).length > 0) {
+//     setFormErrors(Errors);
 //     return;
 //   }
 
@@ -804,7 +815,7 @@ export default Wallet;
 
 //       {/* Content Area */}
 //       <div className="px-4 mt-6">
-//         {error && <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-100 rounded-lg flex items-center gap-2 text-sm"><AlertCircle size={16}/>{error}</div>}
+//         {Error && <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-100 rounded-lg flex items-center gap-2 text-sm"><AlertCircle size={16}/>{Error}</div>}
 //         {success && <div className="mb-4 p-3 bg-green-50 text-green-700 border border-green-100 rounded-lg flex items-center gap-2 text-sm"><CheckCircle size={16}/>{success}</div>}
 
 //         {/* WITHDRAWAL FORM */}

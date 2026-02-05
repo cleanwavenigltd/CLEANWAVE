@@ -68,8 +68,13 @@ const { resetEmail } = require("../utils/resetEmail");
 
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, state, lga, phone, password, gender } = req.body;
+    console.log("authController:: req.body: ", req.body);
 
+    if (!req.body) {
+      return res.status(400).json({ error: "NO credentials provided !" });
+    }
+    const { name, email, state, lga, phone, password, gender } = req.body;
+    console.log("authControllers:: req.body ", req.body, typeof req.body);
     if (!name || !email || !state || !lga || !phone || !password || !gender) {
       return res.status(400).json({ error: "All fields are required" });
     }
@@ -81,47 +86,54 @@ exports.createUser = async (req, res) => {
       .first();
 
     if (exists) {
+      console.log("Exist", exists);
       return res
         .status(409)
         .json({ error: "Email or Phone number already registered" });
     }
+    console.log("authControllers: body ", req.body);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const verificationToken = jwt.sign(
       { email },
       process.env.EMAIL_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
 
     // 1. AWAIT the email sending
-    const emailResponse = await sendVerificationEmail(email, verifyUrl);
+    // const emailResponse = await sendVerificationEmail(email, verifyUrl);
 
     // 2. Correct Error Checking (matches your sendEmail return object)
-    if (emailResponse.error) {
-      console.error("Email dispatch failed:", emailResponse.error);
-      return res.status(403).json({
-        error: "Failed to send verification email. Please try again.",
-      });
-    }
+    // if (emailResponse.error) {
+    //   console.error("Email dispatch failed:", emailResponse.error);
+    //   return res.status(403).json({
+    //     error: "Failed to send verification email. Please try again.",
+    //   });
+    // }
+
+    // For testing to see how the syncronous works
+    sendVerificationEmail(email, verifyUrl).catch((err) => {
+      console.log("Erro Sending Email: ", err.message);
+    });
 
     // 3. Insert into Database only if email was sent successfully
-    await knex("Users").insert({
-      name,
-      email: email.toLowerCase().trim(),
-      phone,
-      password: hashedPassword,
-      gender,
-      role: "user",
-      state,
-      lga,
-      verification_token: verificationToken,
-      is_verified: false,
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
-    });
+    // await knex("Users").insert({
+    //   name,
+    //   email: email.toLowerCase().trim(),
+    //   phone,
+    //   password: hashedPassword,
+    //   gender,
+    //   role: "user",
+    //   state,
+    //   lga,
+    //   verification_token: verificationToken,
+    //   is_verified: false,
+    //   created_at: knex.fn.now(),
+    //   updated_at: knex.fn.now(),
+    // });
 
     return res.status(201).json({
       success: true,
@@ -164,7 +176,7 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: account.id, role: account.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     res.status(200).json({
@@ -268,7 +280,7 @@ exports.getProfile = async (req, res) => {
         "state",
         "capacity",
         "lga",
-        "age"
+        "age",
       )
       .where({ id: userId, role: role })
       .first();

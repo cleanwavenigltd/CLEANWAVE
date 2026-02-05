@@ -107,15 +107,15 @@ export default function Team() {
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
           >
-            {managementTeam.map((member) => (
+            {managementTeam.map((member) => {
               <TeamMemberCard
                 key={member.name}
                 name={member.name}
                 role={member.role}
                 bio={member.bio}
                 image={member.image}
-              />
-            ))}
+              />;
+            })}
           </motion.div>
         </motion.section>
 

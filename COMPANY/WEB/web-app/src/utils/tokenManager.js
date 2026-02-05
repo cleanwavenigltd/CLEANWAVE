@@ -1,5 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { logout } from "./auth";
+import { store } from "../store/store";
+import { clearAuth } from "../store/authSlice";
 
 let logoutTimer = null;
 
@@ -22,12 +24,14 @@ export const startTokenTimer = (token) => {
 
     // AUTO LOGOUT
     logoutTimer = setTimeout(() => {
+      store.dispatch(clearAuth());
       logout();
-    //   alert("Your session has expired. Please log in again.");
+      //   alert("Your session has expired. Please log in again.");
       window.location.href = "/"; // redirect to login
     }, timeLeft);
   } catch (err) {
     console.error("Invalid token:", err);
+
     logout();
   }
 };

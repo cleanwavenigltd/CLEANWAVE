@@ -9,10 +9,14 @@ import {
   Loader2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getProfile, updateProfile,logout } from "../services/authservice";
+import { getProfile, updateProfile, logout } from "../services/authservice";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const { userData,isLoading} = useSelector((state) => state.auth);
+
+  const user = userData;
+  console.log(user);
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -26,32 +30,15 @@ const Profile = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  // Fetch user profile on component mount
   useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-      const res = await getProfile();
-
-      if (res.success) {
-        const info = res.user;
-        console.log("info: ", info.name);
-        setUser(info);
-        setForm({
-          name: info.name,
-          email: info.email,
-          phone: info.phone,
-          password: "",
-        });
-      } else {
-        setError("Failed to load profile");
-        handleLogout()
-      }
-
-      setLoading(false);
-    };
-
-    fetchProfile();
+    setForm({
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      password: "",
+    });
   }, []);
+
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -88,7 +75,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="animate-spin w-10 h-10 text-green-700" />

@@ -1,29 +1,32 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { walletBalance } from "../../../services/authservice";
 import { getPendingPickups } from "../../../services/pickupService";
 // import { getWasteBank } from "../../../services/wasteservice";
-import { PageContext } from "../../../contexts/PageContext";
+import { useDispatch } from "react-redux";
+import { setActiveTab } from "../../../store/uiSlice";
 import { getConWasteBank } from "../../../services/wasteservice";
 
 const HomePage = () => {
+  const dispatch = useDispatch();
   const [balance, setBalance] = useState(0);
   const [PickupsCount, setPickupsCount] = useState(0);
   const [wasteBanksCount, setWasteBanksCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const { setActiveTab } = useContext(PageContext);
+  const handleTabChange = (tabId) => {
+    dispatch(setActiveTab(tabId));
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const [pickupRes, walletRes, connWasteResp] =
-          await Promise.all([
-            getPendingPickups(),
-            // getWasteBank(),
-            walletBalance(),
-            getConWasteBank(),
-          ]);
+        const [pickupRes, walletRes, connWasteResp] = await Promise.all([
+          getPendingPickups(),
+          // getWasteBank(),
+          walletBalance(),
+          getConWasteBank(),
+        ]);
 
         if (pickupRes.success) {
           console.log("PickupRes Data: ", pickupRes.data);
@@ -36,7 +39,7 @@ const HomePage = () => {
           setBalance(walletRes.balance);
         }
         if (connWasteResp.success) {
-          console.log("ConnWaste: ",connWasteResp.data.conWasteBanks.count)
+          console.log("ConnWaste: ", connWasteResp.data.conWasteBanks.count);
           // alert(connWasteResp.data)
           setWasteBanksCount(connWasteResp.data.conWasteBanks.count);
         }
@@ -90,17 +93,17 @@ const HomePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <ActionButton
             label="View Pickups"
-            onClick={() => setActiveTab("pickups")}
+            onClick={() => handleTabChange("pickups")}
             icon="📍"
           />
           <ActionButton
             label="My Wallet"
-            onClick={() => setActiveTab("wallet")}
+            onClick={() => handleTabChange("wallet")}
             icon="💳"
           />
           <ActionButton
             label="My Profile"
-            onClick={() => setActiveTab("profile")}
+            onClick={() => handleTabChange("profile")}
             icon="👤"
           />
         </div>
