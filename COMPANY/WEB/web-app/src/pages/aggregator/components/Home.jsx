@@ -34,7 +34,7 @@ const HomePage = () => {
           setWasteBanksCount(wasteRes.data.wasteBanks.wasteBanks.count);
         }
         if (walletRes.success) {
-          console.log("Balance", balance);
+          console.log("Balance", walletRes.balance);
           setBalance(walletRes.balance);
         }
       } catch (error) {

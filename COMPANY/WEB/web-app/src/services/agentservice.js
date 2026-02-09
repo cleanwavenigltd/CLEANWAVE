@@ -1,6 +1,5 @@
 import api from "../utils/api";
 
-
 export const registerAgent = async (userData) => {
   try {
     const response = await api.post("/agents/register", userData);
@@ -30,4 +29,4 @@ export function deleteAgent() {
 export const getPendingPickups = async () => {};
 export const getAcceptedPickups = async () => {};
 export const getDeliveredPickups = async () => {};
-export const acceptPickup = async (id) => {};
+export const acceptPickup = async () => {};

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, memo, useEffect } from "react";
 import {
   WalletIcon,
   WifiIcon,
@@ -10,30 +10,32 @@ import {
   Loader,
   CheckCircle,
 } from "lucide-react";
-import { useEffect } from "react";
-import {
-  walletBalance,
-  getTransactionHistory,
-  checkAccountNumber,
-  transferFunds,
-} from "../services/authservice";
+import { checkAccountNumber, transferFunds } from "../services/authservice";
 import { NIGERIAN_BANKS } from "../data/banks";
 import { useSelector } from "react-redux";
 
-const Wallet = () => {
-  let { transactions, wallet, pickups, isLoading, error } = useSelector(
+/**
+ * Wallet Component
+ * PERFORMANCE OPTIMIZATIONS:
+ * - Memoized to prevent re-renders from parent updates
+ * - useCallback for event handlers
+ * - Efficient state management with proper dependency arrays
+ */
+const Wallet = memo(() => {
+  let { transactions, wallet, isLoading, error } = useSelector(
     (state) => state.auth,
   );
-  // transactions = Array(transactions);
-  console.log("transactions", transactions);
-  // const [balance, setBalance] = useState(0);
-  const balance = wallet?.balance;
+
+  const [balance, setBalance] = useState(wallet?.balance ?? 0);
+  useEffect(() => {
+    setBalance(wallet?.balance ?? 0);
+  }, [wallet?.balance]);
   const [activeTab, setActiveTab] = useState("purchase");
   const [Transactions, setTransactions] = useState([]);
   const [withdrawalForm, setWithdrawalForm] = useState({
     bankCode: "",
     accountNumber: "",
-    accountName: "", // Usually fetched via API
+    accountName: "",
     amount: "",
     pin: "",
   });
@@ -49,33 +51,15 @@ const Wallet = () => {
     Error = "Failed to load wallet data";
   }
 
-  // const fetchWalletData = useCallback(async () => {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     const [res, txHistory] = await Promise.all([
-  //       walletBalance(),
-  //       getTransactionHistory(),
-  //     ]);
-  //     console.log("Transaction histroy", txHistory.transactions.transactions);
-  //     if (res.success) {
-  //       setBalance(res.balance);
-  //       setTransactions(
-  //         txHistory.data || txHistory.transactions.transactions || [],
-  //       );
-  //     } else {
-  //       setError("Failed to load wallet data");
-  //     }
-  //   } catch (err) {
-  //     setError("Network Error. Please try again.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, []);
+  // PERFORMANCE: Memoized form change handler
+  const handleWithdrawalFormChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setWithdrawalForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }, []);
 
-  // useEffect(() => {
-  //   fetchWalletData();
-  // }, []);
   const [form, setForm] = useState({
     serviceType: "airtime",
     network: "",
@@ -93,9 +77,10 @@ const Wallet = () => {
     { label: "5GB – ₦2000", value: "5GB", price: 2000 },
   ];
 
-  const validateForm = () => {
+  // PERFORMANCE: Memoized form validation
+  const validateForm = useCallback(() => {
     const Errors = {};
-    const { serviceType, network, phone, amount, dataBundle } = form;
+    const { serviceType, amount, dataBundle } = form;
 
     if (!network) Errors.network = "Network provider is required";
     if (!phone) Errors.phone = "Phone number is required";
@@ -112,7 +97,7 @@ const Wallet = () => {
 
     setFormErrors(Errors);
     return Object.keys(Errors).length === 0;
-  };
+  }, [form]);
 
   const handlePurchase = async (e) => {
     e.preventDefault();
@@ -160,6 +145,7 @@ const Wallet = () => {
       });
       setFormErrors({});
     } catch (err) {
+      console.error(err);
       setError("Transaction failed. Please try again.");
     } finally {
       setLoading(false);
@@ -186,6 +172,7 @@ const Wallet = () => {
         setVerified(false);
       }
     } catch (err) {
+      console.error(err);
       setError("Network Error during account verification");
       setVerified(false);
     } finally {
@@ -238,6 +225,7 @@ const Wallet = () => {
         setActiveTab("transactions");
       }
     } catch (err) {
+      console.error(err);
       setError("Withdrawal failed. Please check your connection.");
     } finally {
       setLoading(false);
@@ -251,6 +239,15 @@ const Wallet = () => {
     setSelectedBank(bank.name);
     setbankSearch("");
     setShowbankDropdown(false);
+  };
+
+  // Minimal fetch stub to avoid undefined calls; implement as needed
+  const fetchWalletData = async () => {
+    try {
+      // TODO: dispatch refresh or call wallet endpoint
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const filteredbanks = NIGERIAN_BANKS.filter((bank) =>
@@ -591,13 +588,9 @@ const Wallet = () => {
                     type="number"
                     placeholder="0123456789"
                     className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                    name="accountNumber"
                     value={withdrawalForm.accountNumber}
-                    onChange={(e) =>
-                      setWithdrawalForm({
-                        ...withdrawalForm,
-                        accountNumber: e.target.value,
-                      })
-                    }
+                    onChange={handleWithdrawalFormChange}
                   />
                   {formErrors.accountNumber && (
                     <p className="text-red-500 text-[10px] mt-1">
@@ -623,13 +616,9 @@ const Wallet = () => {
                     type="number"
                     placeholder="Min ₦100"
                     className="w-full mt-1 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8CA566]"
+                    name="amount"
                     value={withdrawalForm.amount}
-                    onChange={(e) =>
-                      setWithdrawalForm({
-                        ...withdrawalForm,
-                        amount: e.target.value,
-                      })
-                    }
+                    onChange={handleWithdrawalFormChange}
                   />
                   {formErrors.amount && (
                     <p className="text-red-500 text-[10px] mt-1">
@@ -702,7 +691,7 @@ const Wallet = () => {
       </div>
     )
   );
-};
+});
 
 export default Wallet;
 

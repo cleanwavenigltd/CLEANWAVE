@@ -11,7 +11,7 @@ function Aggregator() {
   const [editingUser, setEditingUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [url, setUrl] = useState(false);
+  // const [url, setUrl] = useState(false);
 
   // Fetch Aggregators
   const fetchData = useCallback(async () => {
@@ -65,7 +65,7 @@ function Aggregator() {
             onClick={() => {
               setEditingUser(null);
               setShowModal(true);
-              setUrl(true);
+              // setUrl(true);
             }}
             className="px-4 py-2 rounded-md bg-[#8CA566] text-white text-sm hover:bg-[#4C862D]"
           >
@@ -112,7 +112,7 @@ function Aggregator() {
                       onClick={() => {
                         setEditingUser(user);
                         setShowModal(true);
-                        setUrl(false);
+                        // setUrl(false);
                       }}
                       className="text-sm px-3 py-1 rounded-md border border-gray-200 hover:bg-gray-50"
                     >

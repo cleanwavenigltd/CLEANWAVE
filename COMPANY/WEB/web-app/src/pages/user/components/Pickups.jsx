@@ -424,7 +424,7 @@ export default function Pickups() {
         setError(resp.message || "Cannot request pickup");
       }
     } catch (err) {
-      setError("Server error. Please try again.");
+      setError("Server error. Please try again.",err);
     } finally {
       setLoading(false);
     }

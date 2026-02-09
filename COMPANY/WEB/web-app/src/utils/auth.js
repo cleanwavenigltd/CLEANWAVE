@@ -17,7 +17,7 @@ export const loginUser = () => {
     }
 
     return decoded; // { userId, role, iat, exp }
-  } catch (err) {
+  } catch {
     // Token is invalid or corrupted
     sessionStorage.removeItem("token");
     return null;

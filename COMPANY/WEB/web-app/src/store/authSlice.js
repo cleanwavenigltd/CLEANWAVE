@@ -30,7 +30,6 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/api"; // Your axios instance
-import { act } from "react";
 
 // This is the "Big O" optimization: One request to get everything
 export const fetchUserData = createAsyncThunk(
@@ -55,6 +54,8 @@ const initialState = {
   wallet: null, // New: Stores balance
   pickups: [], // New: Stores recent activity
   transactions: [],
+  categories: null,
+  wasteData: null,
   profile: null,
   status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
   isLoading: false, // Boolean for easier access
@@ -88,6 +89,8 @@ const authSlice = createSlice({
       state.wallet = null;
       state.profile = null;
       state.transactions = [];
+      state.categories = null;
+      state.wasteData = null;
       state.pickups = [];
       state.status = "idle";
       state.isLoading = false;
@@ -114,6 +117,8 @@ const authSlice = createSlice({
         state.profile = action.payload;
         state.pickups = action.payload.pickups || [];
         state.transactions = action.payload.transactions || [];
+        state.categories = action.payload.categories || null;
+        state.wasteData = action.payload.wasteData || null;
         state.error = null;
         // Sync role just in case
         if (action.payload.user) {

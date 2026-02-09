@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { formatCurrency } from "../Dashboard";
 import {
   getAgents,
-  registerAgent,
+  // registerAgent,
   deleteAgent,
 } from "../../../services/agentservice";
 import UserModal from "../layouts/modals";

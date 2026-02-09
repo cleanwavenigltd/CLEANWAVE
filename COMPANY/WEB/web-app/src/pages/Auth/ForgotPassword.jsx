@@ -37,12 +37,13 @@ export default function ForgotPassword({ onSwitch }) {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         console.log("Password reset link sent to:", email);
       } catch (err) {
+        console.error(err);
         setError("Network error. Please try again later.");
       } finally {
         setLoading(false);
       }
     },
-    [email]
+    [email],
   );
 
   return (
@@ -121,7 +122,7 @@ export default function ForgotPassword({ onSwitch }) {
             &larr; Back to Login
           </button>
         </div>
-      </div> 
+      </div>
     </div>
   );
 }

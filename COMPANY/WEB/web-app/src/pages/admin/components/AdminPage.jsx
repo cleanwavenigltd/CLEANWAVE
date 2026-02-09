@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { clearAuth } from "../../../store/authSlice";
 import { MetricCard } from "../Dashboard";
 import { getAllInfo, adminLogout } from "../../../services/adminService";
-import { getAggregators } from "../../../services/aggregatorservice";
+// import { getAggregators } from "../../../services/aggregatorservice";
 import {
-  getWasteBanks,
+  // getWasteBanks,
   getWasteCategories,
   createWasteCategory,
 } from "../../../services/wasteservice";
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
             total: info.data.users.total,
           });
         } else {
-          dispatch(clearAuth());
+          // dispatch(clearAuth());
           adminLogout();
         }
       } catch (err) {

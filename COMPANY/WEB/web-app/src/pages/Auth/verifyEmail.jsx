@@ -9,9 +9,9 @@ export default function VerifyEmail() {
   const [message, setMessage] = useState("Verifying...");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const token = searchParams.get("token");
 
   useEffect(() => {
-    const token = searchParams.get("token");
     if (!token) {
       setMessage("Invalid verification link.");
       return;
@@ -19,14 +19,15 @@ export default function VerifyEmail() {
 
     axios
       .get(`/auth/verify-email?token=${token}`)
-      .then((res) => {
+      .then(() => {
         setMessage("Email verified successfully! Redirecting to login...");
         setTimeout(() => navigate("/login"), 2000);
       })
-      .catch((err) => {
-        setMessage(err.response?.data || "Verification failed.");
+      .catch((error) => {
+        console.error(error);
+        setMessage(error.response?.data || "Verification failed.");
       });
-  }, [searchParams, navigate]);
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

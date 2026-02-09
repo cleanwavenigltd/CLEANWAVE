@@ -1,14 +1,9 @@
 import { Bell, ImportIcon, LogOut, User } from "lucide-react";
 // import { PageContext } from "../contexts/PageContext";
-import { useState, useContext } from "react";
-
-export default function Header({
-  // userName = "John Doe",
-  // role = "user"
-  //   userAvatar = "https://via.placeholder.com/40",
-}) {
+import { useState } from "react";
+export default function Header() {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([
+  const [notifications] = useState([
     { id: 1, message: "New pickup request available", time: "5m ago" },
     { id: 2, message: "Payment received", time: "1h ago" },
   ]);

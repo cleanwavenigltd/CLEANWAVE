@@ -59,7 +59,7 @@ export default function Dashboard() {
   const renderPage = () => {
     switch (route) {
       case "waste":
-        return <Waste />;shut
+        return <Waste />;
       case "profile":
         return "Profile";
       case "users":

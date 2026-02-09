@@ -37,20 +37,21 @@ export default function Login({ onSwitch }) {
         dispatch(setAuth({ token, role }));
         startTokenTimer(token);
         dispatch(fetchUserData());
-        console.log("res",response);
 
         const routes = {
-          waste: "/wastebank",
+          wastebank: "/wastebank",
           agent: "/agent",
           user: "/home",
           aggregator: "/aggregator",
         };
+        console.log("res", response, routes[role]);
         navigate(routes[role] || "/");
       } else {
         console.log(response);
         setError(response || "Invalid email or password.");
       }
     } catch (err) {
+      console.error(err);
       setError("Connection error. Please check your internet.");
     } finally {
       setLoading(false);

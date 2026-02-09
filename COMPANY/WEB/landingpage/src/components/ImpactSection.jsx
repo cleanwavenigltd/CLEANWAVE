@@ -43,7 +43,8 @@ export default function ImpactSection() {
             Our Impact
           </h2>
           <p className="text-lg text-brand-text/70 max-w-2xl mx-auto">
-            Measurable results in waste management, job creation, and sustainable development.
+            Measurable results in waste management, job creation, and
+            sustainable development.
           </p>
         </motion.div>
 
@@ -54,7 +55,7 @@ export default function ImpactSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {impacts.map((impact, index) => (
+          {impacts.map((impact) => (
             <motion.div key={impact.label} variants={itemVariants}>
               <ImpactCounter label={impact.label} value={impact.value} />
             </motion.div>

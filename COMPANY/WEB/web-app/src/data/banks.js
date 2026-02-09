@@ -62,7 +62,7 @@ export const NIGERIAN_BANKS = [
   { code: "999991", name: "PalmPay" },
   { code: "104", name: "Parallex Bank" },
   { code: "311", name: "Parkway - ReadyCash" },
-  { code: "999992", name: "Opay " || "Paycom" },
+  { code: "999992", name: "Opay / Paycom" },
   { code: "50746", name: "Petra Mircofinance Bank Plc" },
   { code: "076", name: "Polaris Bank" },
   { code: "50864", name: "Polyunwana MFB" },
@@ -93,5 +93,6 @@ export const NIGERIAN_BANKS = [
   { code: "035", name: "Wema Bank" },
   { code: "057", name: "Zenith Bank" },
   //Its optional for paystack, because they dont accept 090405  for now i dont kow for later
-  { code: "50515" || "090405", name: "Moniepoint Microfinance Bank (MFB)" },
+  { code: "50515", name: "Moniepoint Microfinance Bank (MFB)" },
+  { code: "090405", name: "Moniepoint Microfinance Bank (MFB)" },
 ];

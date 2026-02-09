@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { formatCurrency } from "../Dashboard";
-import { getWasteBanks, registerWaste } from "../../../services/wasteservice";
+import { getWasteBanks } from "../../../services/wasteservice";
 import UserModal from "../layouts/modals";
 import { updateProfile } from "../../../services/authservice";
 

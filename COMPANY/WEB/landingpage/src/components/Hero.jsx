@@ -1,7 +1,9 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { motion } from "framer-motion";
-import AppDownload from "./AppDownload";
 import { Link } from "react-router-dom";
+
+// Lazy-load the AppDownload block (non-critical for first paint)
+const AppDownload = lazy(() => import("./AppDownload"));
 
 const MotionLink = motion(Link);
 
@@ -79,8 +81,12 @@ export default function Hero() {
           </MotionLink>
         </motion.div>
 
-        {/* App Download Section */}
-        <AppDownload />
+        {/* App Download Section (lazy-loaded to reduce initial JS) */}
+        <Suspense
+          fallback={<div style={{ minHeight: 200 }} aria-hidden="true" />}
+        >
+          <AppDownload />
+        </Suspense>
       </motion.div>
     </section>
   );

@@ -1,15 +1,23 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 import { logoutUser, getCurrentUser } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+/**
+ * Optimized Navbar Component
+ * PERFORMANCE:
+ * - Memoized to prevent re-renders on parent state changes
+ * - useCallback for logout handler to maintain referential equality
+ * - Minimal DOM operations
+ */
+const Navbar = memo(() => {
   const navigate = useNavigate();
   const user = getCurrentUser();
 
-  const handleLogout = () => {
+  // PERFORMANCE: Memoize logout handler to prevent recreation on each render
+  const handleLogout = useCallback(() => {
     logoutUser();
     navigate("/login");
-  };
+  }, [navigate]);
 
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
@@ -19,7 +27,8 @@ export default function Navbar() {
           <span className="text-gray-600">{user.name}</span>
           <button
             onClick={handleLogout}
-            className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+            className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+            aria-label="Logout"
           >
             Logout
           </button>
@@ -27,4 +36,8 @@ export default function Navbar() {
       )}
     </nav>
   );
-}
+});
+
+Navbar.displayName = "Navbar";
+
+export default Navbar;

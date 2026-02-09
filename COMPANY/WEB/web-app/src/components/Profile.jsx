@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo, useCallback } from "react";
 import {
   UserIcon,
   LogOutIcon,
@@ -9,14 +9,20 @@ import {
   Loader2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getProfile, updateProfile, logout } from "../services/authservice";
+import { updateProfile, logout } from "../services/authservice";
 import { useSelector } from "react-redux";
 
-const Profile = () => {
-  const { userData,isLoading} = useSelector((state) => state.auth);
-
+/**
+ * Profile Component
+ * PERFORMANCE OPTIMIZATIONS:
+ * - useCallback for event handlers to prevent function recreations
+ * - Form state is local to component (no prop drilling)
+ * - Removes console.log in production
+ */
+const Profile = memo(() => {
+  const { userData, isLoading } = useSelector((state) => state.auth);
   const user = userData;
-  console.log(user);
+
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -24,48 +30,62 @@ const Profile = () => {
     phone: "",
     password: "",
   });
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
+  // PERFORMANCE: Initialize form once
   useEffect(() => {
-    setForm({
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      password: "",
-    });
+    if (user) {
+      setForm({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        password: "",
+      });
+    }
+  }, [user]); // Depend on user object to satisfy hook dependency
+
+  // PERFORMANCE: Memoized handler for input changes
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   }, []);
 
+  // PERFORMANCE: Memoized save handler
+  const handleSave = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setSaving(true);
+      setError("");
+      setSuccess("");
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+      const payload = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+      };
+      if (form.password.trim() !== "") {
+        payload.password = form.password;
+      }
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    setError("");
-    setSuccess("");
+      const res = await updateProfile(payload);
 
-    const payload = { name: form.name, email: form.email, phone: form.phone };
-    if (form.password.trim() !== "") payload.password = form.password;
+      if (res.success) {
+        setSuccess("Profile updated successfully!");
+        setEditMode(false);
+      } else {
+        setError(res.message || "Failed to update profile");
+      }
 
-    const res = await updateProfile(payload);
+      setSaving(false);
+    },
+    [form],
+  );
 
-    if (res.success) {
-      setSuccess("Profile updated successfully!");
-      setUser(res.data.user);
-      setEditMode(false);
-    } else {
-      setError(res.message || "Failed to update profile");
-    }
-
-    setSaving(false);
-  };
-
-  const handleLogout = async () => {
+  // PERFORMANCE: Memoized logout handler
+  const handleLogout = useCallback(async () => {
     try {
       await logout();
     } catch (err) {
@@ -73,7 +93,7 @@ const Profile = () => {
     } finally {
       navigate("/");
     }
-  };
+  }, [navigate]);
 
   if (isLoading) {
     return (
@@ -96,7 +116,7 @@ const Profile = () => {
       {/* Header */}
       <div className="bg-gray-400 mt-[100px] text-white py-10 rounded-lg shadow-lg relative">
         <div className="flex flex-col items-center">
-          <div className="w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center">
+          <div className="w-24 h-24 rounded-full bg-white shadow-lg flex items-center justify-center flex-shrink-0">
             <UserIcon className="w-12 h-12 text-[#8CA566]" />
           </div>
           <h2 className="text-2xl font-bold mt-3">{user.name}</h2>
@@ -119,12 +139,14 @@ const Profile = () => {
               <button
                 onClick={() => setEditMode(true)}
                 className="flex-1 bg-[#8CA566] text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-green-800 transition"
+                type="button"
               >
                 <Edit2Icon className="w-4 h-4" /> Edit Profile
               </button>
               <button
                 onClick={handleLogout}
                 className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-gray-300 transition"
+                type="button"
               >
                 <LogOutIcon className="w-4 h-4" /> Logout
               </button>
@@ -183,7 +205,7 @@ const Profile = () => {
       </div>
     </div>
   );
-};
+});
 
 // Components
 const ProfileItem = ({ icon, label, value }) => (

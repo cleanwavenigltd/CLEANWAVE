@@ -5,27 +5,32 @@ import { Users, Truck, Warehouse, Building2, Crown } from "lucide-react";
 const roles = [
   {
     title: "Users",
-    description: "Waste generators who request pickup services and contribute to the circular economy.",
+    description:
+      "Waste generators who request pickup services and contribute to the circular economy.",
     icon: Users,
   },
   {
     title: "Agents",
-    description: "Local collectors who pick up waste and deliver it to Waste Banks for compensation.",
+    description:
+      "Local collectors who pick up waste and deliver it to Waste Banks for compensation.",
     icon: Truck,
   },
   {
     title: "Waste Banks",
-    description: "Community-based facilities that sort, store, and prepare recyclables for bulk collection.",
+    description:
+      "Community-based facilities that sort, store, and prepare recyclables for bulk collection.",
     icon: Warehouse,
   },
   {
     title: "Aggregators",
-    description: "Regional managers who oversee Agents and Waste Banks within local government areas.",
+    description:
+      "Regional managers who oversee Agents and Waste Banks within local government areas.",
     icon: Building2,
   },
   {
     title: "Cleanwave",
-    description: "The platform that connects all stakeholders, manages logistics, and ensures payments.",
+    description:
+      "The platform that connects all stakeholders, manages logistics, and ensures payments.",
     icon: Crown,
   },
 ];
@@ -64,7 +69,8 @@ export default function RolesSection() {
             Our Roles
           </h2>
           <p className="text-lg text-brand-text/70 max-w-2xl mx-auto">
-            Each stakeholder plays a crucial role in our ecosystem, creating value and sustainability.
+            Each stakeholder plays a crucial role in our ecosystem, creating
+            value and sustainability.
           </p>
         </motion.div>
 
@@ -75,7 +81,7 @@ export default function RolesSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
         >
-          {roles.map((role, index) => (
+          {roles.map((role) => (
             <motion.div
               key={role.title}
               variants={itemVariants}

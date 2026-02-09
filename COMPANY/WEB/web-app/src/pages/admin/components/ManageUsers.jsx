@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { formatCurrency } from "../Dashboard";
 import { getAllUsers } from "../../../services/adminService";
-import { register, updateProfile } from "../../../services/authservice";
+import {  updateProfile } from "../../../services/authservice";
 import UserModal from "../layouts/modals";
 
 function UsersPage() {

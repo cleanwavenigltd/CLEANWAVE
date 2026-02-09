@@ -572,6 +572,7 @@ export default function Register({ onSwitch }) {
         });
       }
     } catch (err) {
+      console.error(err);
       setUiState({
         loading: false,
         error: "Service unavailable. Please try again later.",

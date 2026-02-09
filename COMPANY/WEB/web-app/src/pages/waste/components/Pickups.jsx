@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Search } from "lucide-react";
 import { requestWastePickup } from "../../../services/pickupService";
-import { getWasteCategories } from "../../../services/wasteservice";
-
+// import { getWasteCategories } from "../../../services/wasteservice";
+import { useSelector } from "react-redux";
 export default function Pickups() {
+  const { categories } = useSelector((state) => state.auth);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
 
   const [form, setForm] = useState({
@@ -18,24 +19,24 @@ export default function Pickups() {
     note: "",
   });
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await getWasteCategories();
-        if (
-          res &&
-          res.success &&
-          res.data &&
-          Array.isArray(res.data.categories)
-        ) {
-          setCategories(res.data.categories);
-        }
-      } catch (err) {
-        console.error("Failed to fetch categories:", err);
-      }
-    };
-    fetchCategories();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const res = await getWasteCategories();
+  //       if (
+  //         res &&
+  //         res.success &&
+  //         res.data &&
+  //         Array.isArray(res.data.categories)
+  //       ) {
+  //         setCategories(res.data.categories);
+  //       }
+  //     } catch (err) {
+  //       console.error("Failed to fetch categories:", err);
+  //     }
+  //   };
+  //   fetchCategories();
+  // }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,7 +95,7 @@ export default function Pickups() {
       } else {
         setError(response.message || "Failed to submit pickup request");
       }
-    } catch (err) {
+    } catch  {
       setError("Server error. Please try again later");
     } finally {
       setLoading(false);

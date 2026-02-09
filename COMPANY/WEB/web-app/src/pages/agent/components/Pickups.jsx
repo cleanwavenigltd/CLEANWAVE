@@ -73,9 +73,10 @@ const Pickups = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPickups();
-  }, [tab]);
+useEffect(() => {
+  fetchPickups();
+}, [tab]);
+
 
   return (
     <div className="mt-1 mb-[95px] p-2 rounded-lg min-h-screen bg-gray-50">
